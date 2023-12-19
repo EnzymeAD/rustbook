@@ -9,14 +9,6 @@ TODO: Talk about what makes this approach special and a good fit for Rust concep
 TODO: Talk about the new attributes and define the semantics of these new attributes.  Give examples.
 
 
-#### Forward mode
-WIP
-
-In Forward mode we are only allowed to mark input arguments 
-The return value of forward mode with a Duplicated return is a tuple containing as the first value the primal return value and as the second value the derivative.
-
-In forward mode Duplicated(x, 0.0) is equivalent to Const(x), except that we can perform more optimizations for Const.
-
 
 #### Reverse Mode
 Both the inplace and "normal" variant return the gradient. The difference is that with Active the gradient is returned and with Duplicated the gradient is accumulated in place.
