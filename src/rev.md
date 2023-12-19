@@ -1,7 +1,7 @@
 # Reverse Mode
 # Autodiff on LLVM IR
 
-TODO: Typical LICM $O(n)$ vs $O(n^2)$ Enzyme example.
+TODO: Typical LICM \\(O(n)\\) vs \\(O(n^2)\\) Enzyme example.
 TODO: Talk about what makes this approach special and a good fit for Rust conceptually.
 
 ## Changes to Rust
@@ -19,14 +19,14 @@ Both the inplace and "normal" variant return the gradient. The difference is tha
 ### Usage story
 Let us start by looking at the most basic examples we can think of:
 
-$f(x,y) = x^2 + y*3$
+\\[ f(x,y) = x^2 + 3y \\]
 
-We have two input variables $x$, $y$ and a scalar return value.  Just to check our sanity, we first pass it to [wolfram alpha](https://www.wolframalpha.com/input?i2d=true&i=D%5BPower%5Bx%2C2%5D+%2B+y*3%2Cx%5D%3B+D%5BPower%5Bx%2C2%5D+%2B+y*3%2Cy%5D%3B+). No big surprises so far. Let's check for Enzyme (our compiler explorer does not handle Rust yet, so you'l have to trust me on this).
+We have two input variables \\(x\\), \\(y\\) and a scalar return value.  Just to check our sanity, we first pass it to [wolfram alpha](https://www.wolframalpha.com/input?i2d=true&i=D%5BPower%5Bx%2C2%5D+%2B+y*3%2Cx%5D%3B+D%5BPower%5Bx%2C2%5D+%2B+y*3%2Cy%5D%3B+). No big surprises so far. Let's check for Enzyme (our compiler explorer does not handle Rust yet, so you'l have to trust me on this).
 
 ```rust
 #[autodiff(df, Reverse, Active, Active, Active)]
 fn f(x: f32, y: f32) -> f32 {
-  x*x + 3.0 * y
+  x * x + 3.0 * y
 }
 ```
 
@@ -34,43 +34,48 @@ Enzyme actually generates the code on LLVM-IR level, but Rust is nicer to read, 
 
 ```rust
 fn f(x: f32, y: f32) -> f32 {
-  x*x + 3.0 * y
+  x * x + 3.0 * y
 }
 fn df(x: f32, y: f32) -> (f32, f32, f32) {
-  (2.0 * x, 3.0, x*x + 3.0 * y)
+  let d_dx = 2.0 * x;
+  let d_dy = 3.0;
+  let f = x * x + 3.0 * y;
+  (d_dx, d_dy, f)
 }
 ```
 
-$x*x$ becomes $2.0*x$, while $3.0 * y$ becomes $3.0$. The last argument is our original return value. However, we don't always pass things by value, so let's make sure we have a sensible solution:
+Note that the last entry in the result tuple contains the original return value. However, we don't always pass things by value, so let's make sure we have a sensible solution:
 
 ```rust
 #[autodiff(df, Reverse, Active, Duplicated, Active)]
 fn f(x: f32, y: &f32) -> f32 {
-  x*x + 3.0 * y
+  x * x + 3.0 * y
 }
 ```
 
-(pay attention to y).
+(pay attention to `y`).
 
 ```rust
 fn f(x: f32, y: f32) -> f32 {
-  x*x + 3.0 * y
+  x * x + 3.0 * y
 }
-fn df(x: f32, y: &f32, dy: &mut f32) -> (f32, f32) {
-  dy += 3.0;
-  (2.0 * x, x*x + 3.0 * y)
+fn df(x: f32, y: &f32, d_dy: &mut f32) -> (f32, f32) {
+  let d_dx = 2.0 * x;
+  *d_dy += 3.0;
+  let f = x * x + 3.0 * y
+  (d_dx, f)
 }
 ```
 
-In the case of references (or pointers) we do expect the user to create `dy`.
+In the case of references (or pointers) we do expect the user to create `d_dy`.
 
-We could obviously zero-initialize a float for the user, but let's assume the constructor is complex due to involving a double-linked-list or ffi, so we can't guarantee that on the compiler side. As an alternative motivation, imagine that we call `df` 5 times in a loop. It is clear that in this case the accumulated gradients should be 5 times higher too, which won't happen if we set `dy = 3.0` each time, instead of using `+=`. Yet another reason would be higher-order derivatives (todo: just refer to literature?).
+We could obviously zero-initialize a float for the user, but let's assume the constructor is complex due to involving a double-linked-list or ffi, so we can't guarantee that on the compiler side. As an alternative motivation, imagine that we call `df` 5 times in a loop. It is clear that in this case the accumulated gradients should be 5 times higher too, which won't happen if we set `d_dy = 3.0` each time, instead of using `+=`. Yet another reason would be higher-order derivatives (todo: just refer to literature?).
 
 Now that we got back from this rabbit hole, let's go wild and train a neural network on our local national lab server:
 
 ```rust
 #[autodiff(backprop, Reverse, Duplicated, Duplicated, Active)]
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -79,8 +84,7 @@ fn inference(images: &[f32], weights: &[f32]) -> f32 {
 Now Enzyme gives us:
 
 ```rust
-#[autodiff(backprop, Reverse, Duplicated, Duplicated, Active)]
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -98,7 +102,7 @@ We also just learned how we can update our images through `dimages`, but unless 
 
 ```rust
 #[autodiff(backprop, Reverse, Constant, Duplicated, Active)]
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -107,7 +111,7 @@ fn inference(images: &[f32], weights: &[f32]) -> f32 {
 After all, we shouldn't modify our train and test images to improve our accuracy, right? So we now generate:
 
 ```rust
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -122,7 +126,7 @@ Great. No more random dimages that we don't know how to handle. Perfection? Almo
 
 ```rust
 #[autodiff(backprop, Reverse, Constant, Duplicated, DuplicatedNoNeed)]
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -131,7 +135,7 @@ fn inference(images: &[f32], weights: &[f32]) -> f32 {
 Happy to accept better names than `DuplicatedNoNeed`. Either way, now we have:
 
 ```rust
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -140,11 +144,11 @@ fn backprop(images: &[f32], weights: &[f32], dweights: &mut [f32]) {
 }
 ```
 
-We run backprop to get the gradients to update our weights, tracking of the loss while training is optional. Keep in mind that this will allow Enzyme to do some slightly advanced dead code elimination, but at the end of the day Enzyme will still need to compute most of `do_some_math(x,y)` in order to  calculate `dy`. So how much runtime you save by not asking for loss will depend on your application. We won't introduce a new motivation for our last example, but let's assume we have reasons to only want `dweights`, but do not care about the original weights anymore.
+We run backprop to get the gradients to update our weights, tracking of the loss while training is optional. Keep in mind that this will allow Enzyme to do some slightly advanced dead code elimination, but at the end of the day Enzyme will still need to compute most of `do_some_math(x, y)` in order to  calculate `dy`. So how much runtime you save by not asking for loss will depend on your application. We won't introduce a new motivation for our last example, but let's assume we have reasons to only want `dweights`, but do not care about the original weights anymore.
 
 ```rust
 #[autodiff(backprop, Reverse, Constant, DuplicatedNoNeed, DuplicatedNoNeed)]
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -153,7 +157,7 @@ fn inference(images: &[f32], weights: &[f32]) -> f32 {
 `DuplicatedNoNeed` allows Enzyme to reuse the memory of our `weigths` variable as a scratchspace. That means it might increase the performance, but in exchange the variable shall not be assumed to have meaningful values afterwards. That's obviously only valid in Julia, C++, etc., but not in Rust. We had some discussion on whether this can be represented as MaybeUninit or Option but didn't got to a conclusion yet. (WIP)
 
 ```rust
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -166,7 +170,7 @@ And as the very last one, Enzyme follows Jax and all the other AD tools by allow
 
 ```rust
 #[autodiff(backprop, Reverse(2), Constant, Duplicated, DuplicatedNoNeed)]
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -175,7 +179,7 @@ fn inference(images: &[f32], weights: &[f32]) -> f32 {
 We don't expose batchmode on the Rust side yet, let's do one step after the other.
 
 ```rust
-fn inference(images: &[f32], weights: &[f32]) -> f32 {
+fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
 }
@@ -209,7 +213,7 @@ We hope that as part of the nightly releases Rust-Enzyme can mature relatively f
 
 1) Unlike Enzyme.jl, Rust won't encounter bugs based on Garbage Collection, JIT, or Type Unstable code.
 2) Unlike Clang, we do ship the source code for the standard library. On the Rust side, we therefore don't need to manually add support for functions like [`_ZSt18_Rb_tree_decrementPKSt18_Rb_tree_node_base`](https://github.com/EnzymeAD/Enzyme/pull/764/files#diff-33703e707eb3c80e460e135bec72264fd2380201070a2959c6755bb26c72a504R190).
-3) Minimizing Rust code is reasonably nice and cargo makes it easy to reproduce bugs.
+3) Minimizing Rust code is reasonably nice and Cargo makes it easy to reproduce bugs.
 
 
 ## Non-alternatives
