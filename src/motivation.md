@@ -6,9 +6,9 @@ A few voices of autodiff users.
 
 Jan Hückelheim (Argonne National Lab, US):  
 
-_Automatic differentiation (AD, also known as autodiff or back-propagation) has been used at Argonne and other national laboratories, at least, since the 1980s. For example, we have used AD to obtain gradients of computational fluid dynamics applications for shape-optimization, which allows the automated design of aircraft wings or turbine blades to minimize drag or fuel consumption. AD is used extensively in many other applications including seismic imaging, climate modeling, quantum computing, or software verification.
+_Automatic differentiation (AD, also known as autodiff or back-propagation) has been used at Argonne and other national laboratories, at least, since the 1980s. For example, we have used AD to obtain gradients of computational fluid dynamics applications for shape-optimization, which allows the automated design of aircraft wings or turbine blades to minimize drag or fuel consumption. AD is used extensively in many other applications including seismic imaging, climate modeling, quantum computing, or software verification._
 
-Besides the aforementioned “conventional” uses of AD, it is also a cornerstone for the development of ML methods that incorporate physical models. The 2022 department of energy report on Advanced Research Directions on AI for Science, Energy, and Security states that “End-to-end differentiability for composing simulation and inference in a virtuous loop is required to integrate first-principles calculations and advanced AI training and inference”. It is therefore conceivable that AD usage and development will become even more important in the near future._
+_Besides the aforementioned “conventional” uses of AD, it is also a cornerstone for the development of ML methods that incorporate physical models. The 2022 department of energy report on Advanced Research Directions on AI for Science, Energy, and Security states that “End-to-end differentiability for composing simulation and inference in a virtuous loop is required to integrate first-principles calculations and advanced AI training and inference”. It is therefore conceivable that AD usage and development will become even more important in the near future._
 [1](https://www.anl.gov/sites/www/files/2023-05/AI4SESReport-2023.pdf)
 
 Prof. Jed Brown (UC Boulder, US):  
