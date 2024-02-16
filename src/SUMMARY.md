@@ -15,6 +15,8 @@
 - [How to Debug](./Debugging.md)
 # Reference Guide
 - [Other Enzyme frontends](./other_Frontends.md)
+- [Forward Mode](./fwd.md)
+- [Reverse Mode](./rev.md)
 - [User facing design](./user_design.md)
 - [rustc internal design](./rustc_design.md)
 
