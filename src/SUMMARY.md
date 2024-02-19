@@ -1,6 +1,6 @@
 # Summary
 
-# User Guide
+# User sGuide
 - [What is Autodiff?](./chapter_1.md)
 - [Motivation](./motivation.md)
 - [Prior Art](./prior_art.md)
@@ -19,5 +19,7 @@
 - [Reverse Mode](./rev.md)
 - [User facing design](./user_design.md)
 - [rustc internal design](./rustc_design.md)
+- [Unsafe Interface](./unsafe.md)
+
 
 - [Acknowledgments](./acknowledgments.md)
