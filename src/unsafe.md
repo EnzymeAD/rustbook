@@ -33,9 +33,9 @@ fn main() {
 }
 ```
 
-The first optimization here is `DualOnly`. Now 
+The first optimization here is using `DualOnly`. Now 
 ```rust
-#[autodiff(df, Forward, Dual, Dual)]
+#[autodiff(df, Forward, DualOnly, DualOnly)]
 fn f(x: &[f32], y: &mut f32) { ... }
 // fn df(x: Vec<f32>, dx: &mut[f32], y: f32, dy: &mut f32);
 ```
@@ -43,7 +43,7 @@ Both x and y become inaccessible, so no harm can happen. But let us assume
 that we have to reuse these expensive memory allocations.
 
 ```rust 
-#[unsafe_ad(df, Forward, Dual, Dual)]
+#[unsafe_ad(df, Forward, DualOnly, DualOnly)]
 fn f(x: &[f32], y: &mut f32) { ... }
 // unsafe fn df(x: MaybeUninit<[f32]>, dx: &mut[f32], y: MaybeUninit<&f32>, dy: &mut f32);
 ```
