@@ -43,9 +43,9 @@ we would now only return `2.0 * x`, instead of
 `DuplicatedOnly` has the same effect as `DualOnly` on input Arguments.
 The original input will now be taken by Value, allowing to use it 
 as a scratch space. If the original Type was a mutable reference, we can 
-additionally additionally save the computation of any updates to that value.
+additionally save the computation of any updates to that value.
 
 > <div class="warning">
 > Unlike Forward Mode, Reverse Mode will always overwrite (zero) your seed!   
-> If you want to call a function generated through Reverse Mode, you will have to reset your seed values!
+> If you want to call a function generated through Reverse Mode multiple times, you will have to reset your seed values!
 > </div>
