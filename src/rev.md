@@ -20,12 +20,30 @@ to overwrite (zero) your seed values for correctness. A motivation for this is g
 | Activity              | Active    |Duplicated  |      Const |
 |-----------------------|-----------|------------|------------|
 | `f32` or `f64` Input  | Return additional float | N/A  | Unchanged |
-| `&` or `&mut` Input   | N/A       | Add &mut shadow | Unchanged |
+| `&T` or `&mut T` Input | N/A       | Add `&mut T` shadow | Unchanged |
 | Other Input Types     | N/A       | N/A          | Unchanged |
 | `f32` or `f64` Output | Append float to inputs | N/A | Unchanged |
 | Other Output Types    | N/A       | N/A          | Unchanged |
 
+Similar to Forward Mode, we offer optimized versions of our Activity Types.
+#
+| Activity               | ActiveOnly   | DuplicatedOnly |
+|------------------------|--------------|----------------|
+| `f32` or `f64` Input   | N/A          | N/A            |
+| `&T` or `&mut T` Input | N/A          | Accept `T, &mut T` |
+| `f32` or `f64` Output  | Omit primal return value <br> Append float to inputs | N/A |
 
+`ActiveOnly` can not yield any optimization for input values, since it is only 
+applicable to floats passed by value. When used on a return type, it has the same 
+effect as `DualOnly` in Forward Mode.
+So in the case of `fn f(x: f32) -> f32 { x * x }`, 
+we would now only return `2.0 * x`, instead of
+`(x * x, 2.0 * x)`, which we would get with `Active`.  
+
+`DuplicatedOnly` has the same effect as `DualOnly` on input Arguments.
+The original input will now be taken by Value, allowing to use it 
+as a scratch space. If the original Type was a mutable reference, we can 
+additionally additionally save the computation of any updates to that value.
 
 > <div class="warning">
 > Unlike Forward Mode, Reverse Mode will always overwrite (zero) your seed!   
