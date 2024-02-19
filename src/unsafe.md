@@ -45,7 +45,7 @@ that we have to reuse these expensive memory allocations.
 ```rust 
 #[unsafe_ad(df, Forward, DualOnly, DualOnly)]
 fn f(x: &[f32], y: &mut f32) { ... }
-// unsafe fn df(x: MaybeUninit<[f32]>, dx: &mut[f32], y: MaybeUninit<&f32>, dy: &mut f32);
+// unsafe fn df(x: MaybeUninit<&[f32]>, dx: &mut[f32], y: MaybeUninit<&mut f32>, dy: &mut f32);
 ```
 We expect both x and y to be in a valid state, however they will be in an invalid state after calling df. This allows us to omit computing their original output value and it also allows us to re-use it's memory location as buffer memory.
 
