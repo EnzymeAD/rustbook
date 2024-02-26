@@ -7,6 +7,13 @@ We had added our autodiff macro in `/library`, but this approach had to be aband
 We had to alter the compilation pipeline in a few places when autodiff is used.
 The obvious one is that we have to prevent our source function from getting competely inlined. 
 
+`compiler/rustc_ast/src/expand/autodiff_attrs.rs`
+This is a new file, containing the logic to parse our autodiff macro into rustc 
+builtin `rustc_autodiff` attributes. 
+This blocks users from tinkering with our internals, 
+by having to go through the macro.
+It has the nice side-effect, that we can implement an erroring dummy fallback if 
+we see that the `llvm_enzyme` config hasn't been set when building rustc.
 
 `compiler/rustc_codegen_llvm/src/attributes.rs`: 
 In `from_fn_attrs` we query `cx.tcx.autodiff_attrs(instance.def_id());`
