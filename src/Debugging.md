@@ -10,6 +10,8 @@ to remove the whole body of the function being differentiated
 which matches almost every return type). 
 Such a reproducer is trivial to fix, so please let us know!
 
+For the unexpected case, that you produce an ICE in our frontend that 
+is harder to minimize, please consider using [icemelter](https://github.com/langston-barrett/icemelter).
 
 ### Backend crashes
 Few lines of Rust code will expand into much larger LLVM-IR.
