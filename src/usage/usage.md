@@ -11,7 +11,7 @@ However, this tutorial can easily be applied to arbitrary \\(m \in \mathbb{N}\\)
 
 ```rust
 fn f(x: &[f32], y: &mut f32) {
-    y = x[0] * x[0] + x[1] * x[0];
+    *y = x[0] * x[0] + x[1] * x[0];
 }
 ```
 We also support functions that return a float value:
@@ -35,31 +35,14 @@ we have to seed \\(\dot{x}\\) with \\(\dot{x}=[1.0,0.0]\\).
 
 In the forward mode the second element which gets added for Dual arguments stores the tangent.
 ```rust
-#[autodiff(df, Forward, Dual, Dual)]
-fn f(x: &[f32], y: &mut f32) { ... }
-
-fn main() {
-    let x  = [2.0, 2.0];
-    let dx = [1.0, 0.0];
-    let y  = 0.0
-    let dy = 0.0;
-    df(&x, &mut dx, &mut y, &mut dy);
-}
+{{#include ../../samples/tests/forward/mod.rs:empty_return}}
 ```
 In the returning case we would write similar code, note that in this case
 the second Dual refers to our return value.
 ```rust
-#[autodiff(df, Forward, Dual, Dual)]
-fn f(x: &[f32]) -> f32 { ... }
-
-fn main() {
-    let x  = [2.0, 2.0];
-    let dx = [1.0, 0.0];
-    let (y, dy) = df(&x, &mut dx);
-}
+{{#include ../../samples/tests/forward/mod.rs:dual_return}}
 ```
-Note that to acquire the full gradient one needs to execute the forward model a second time with the seed dx set to [0.0,1.0].
-
+Note that to acquire the full gradient one needs to execute the forward model a second time with the seed `dx` set to `[0.0, 1.0]`.
 
 
 ## Reverse Mode
@@ -79,16 +62,7 @@ as `Duplicated`. Then the first element represent the value and the second
 the adjoint. Evaluating the reverse model using Enzyme is done in the 
 following example.
 ```rust
-#[autodiff(df, Reverse, Duplicated, Duplicated)]
-fn f(x: &[f32], y: &mut f32) { ... }
-
-fn main() {
-    let x  = [2.0, 2.0];
-    let bx = [0.0, 0.0];
-    let y  = 0.0
-    let by = 1.0;
-    df(&x, &mut dx, &mut y, &mut dy);
-}
+{{#include ../../samples/tests/reverse/mod.rs:empty_return}}
 ```
 This yields the gradient of `f` in `bx` at point `x = [2.0, 2.0]`. 
 `by` is called the seed and has to be set to ``1.0`` in order to compute 
@@ -99,7 +73,7 @@ We can again also handle functions returning a scalar. In this case we mark the
 return value as duplicated. The seed is then going to be an extra,
 last input argument.
 
-```rust
+```rust,ignore
 #[autodiff(dg, Reverse, Duplicated, Active)]
 fn g(x: &[f32]) -> f32 { ... }
 
@@ -114,7 +88,7 @@ fn main() {
 
 We can now verify that indeed the reverse mode and forward mode yield the same result. 
 
-```rust
+```rust,ignore
 #[autodiff(df_f, Forward, Dual, Dual)]
 #[autodiff(df_r, Reverse, Duplicated, Duplicated)]
 fn f(x: &[f32], y: &mut f32) { ... }
