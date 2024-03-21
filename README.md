@@ -41,7 +41,21 @@ It's unlikely that you want `enzyme` as your default toolchain for all your rust
 $ rustup override set enzyme
 ```
 
-### mdBook testing
+### Testing with Cargo
+
+Code samples worth testing are being migrated to the `samples` crate. You can run all samples with a simple
+
+``` console
+$ cargo test
+```
+
+or, using [cargo-nextest](https://nexte.st/),
+
+``` console
+$ cargo nextest run
+```
+
+### Testing with mdBook (deprecated)
 
 Finally, you can run tests for all chapters using
 
@@ -54,6 +68,8 @@ or a specific chapter using that chapter's name, such as
 ```console
 $ mdbook test -c Usage
 ```
+
+This testing mode is being phased out as we move testable code into the `samples` crate. When using this mode, you will need the following workaround:
 
 #### mdBook and `lto=fat` (temporary workaround)
 
