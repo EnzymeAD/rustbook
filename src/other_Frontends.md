@@ -5,7 +5,7 @@ Enzyme currently has experimental frontends for C/C++, Julia, Fortran, Numba, so
 General LLVM/MLIR, as well as C/C++/CUDA documentation is available at [https://enzyme.mit.edu](https://enzyme.mit.edu)  
 Julia documentation is available at [https://enzyme.mit.edu/julia](https://enzyme.mit.edu/julia)  
 Rust  documentation is available at [https://enzyme.mit.edu/rust](https://enzyme.mit.edu/rust)  
-Enzyme-JAX interop is available at [https://github.com/EnzymeAD/Enzyme-JAX](https://github.com/EnzymeAD/Enzyme-JAX)
+Enzyme-JAX interop is available at [https://github.com/EnzymeAD/Enzyme-JAX](https://github.com/EnzymeAD/Enzyme-JAX)  
 Numba documentation is tba.  
 Fortran documentation is tba.  
 
