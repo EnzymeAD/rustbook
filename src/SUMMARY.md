@@ -1,6 +1,6 @@
 # Summary
 
-# User sGuide
+# User Guide
 - [What is Autodiff?](./chapter_1.md)
 - [Motivation](./motivation.md)
 - [Prior Art](./prior_art.md)

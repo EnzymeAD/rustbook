@@ -31,4 +31,18 @@ Otherwise we have various alternatives, including
 Potentially also
 [creduce](https://github.com/csmith-project/creduce)
 
+### Supported Environment Variables
+To support you while debugging, we have added support for various environment variables,
+which allow changing the behaviour of Enzyme, without recompiling rustc.
+If you change your environment variables, you may need to run `cargo clean` to see the new behaviour.
+We currently support:
+```bash
+export ENZYME_PRINT_TA=1
+export ENZYME_PRINT_AA=1
+export ENZYME_PRINT_PERF=1
+export ENZYME_PRINT=1
+export ENZYME_PRINT_MOD=1
+export ENZYME_PRINT_MOD_AFTER=1
+export ENZYME_LOOSE_TYPES=1
+```
 
