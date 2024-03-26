@@ -11,7 +11,7 @@ TODO: Talk about the new attributes and define the semantics of these new attrib
 
 
 #### Reverse Mode
-Both the inplace and "normal" variant return the gradient. The difference is that with Active the gradient is returned and with Duplicated the gradient is accumulated in place.
+Both the inplace and "normal" variant return the gradient. The difference is that with `Active` the gradient is returned and with `Duplicated` the gradient is accumulated in-place.
 
 
 
@@ -21,13 +21,15 @@ Let us start by looking at the most basic examples we can think of:
 
 \\[ f(x,y) = x^2 + 3y \\]
 
-We have two input variables \\(x\\), \\(y\\) and a scalar return value.  Just to check our sanity, we first pass it to [wolfram alpha](https://www.wolframalpha.com/input?i2d=true&i=D%5BPower%5Bx%2C2%5D+%2B+y*3%2Cx%5D%3B+D%5BPower%5Bx%2C2%5D+%2B+y*3%2Cy%5D%3B+). No big surprises so far. Let's check for Enzyme (our compiler explorer does not handle Rust yet, so you'l have to trust me on this).
+We have two input variables \\(x\\), \\(y\\) and a scalar return value.
+The gradient is
 
-```rust
-#[autodiff(df, Reverse, Active, Active, Active)]
-fn f(x: f32, y: f32) -> f32 {
-  x * x + 3.0 * y
-}
+\\[ \nabla f = \Big[\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y} \Big] = \big[2x, 3 \big] \\]
+
+Let's check for Enzyme (our compiler explorer does not handle Rust yet, so you'll have to trust me on this).
+
+```rust,noplayground
+{{#include ../../samples/tests/reverse/mod.rs:all_active}}
 ```
 
 Enzyme actually generates the code on LLVM-IR level, but Rust is nicer to read, so I will pretend we would generate a Rust implementation:

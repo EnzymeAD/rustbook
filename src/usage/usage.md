@@ -54,8 +54,7 @@ y &= f(x) \\\\
 \bar{x} &= \bar{y} \cdot \nabla f(x)
 \end{aligned}
 \\]
-bar denotes an adjoint variable. Note that executing AD in reverse mode
-computes both ``y`` and the adjoint \\(\bar{x}\\).
+where the bar denotes an adjoint variable. Note that executing AD in reverse mode takes \\(x, \bar y\\) as input and computes \\(y, \bar x\\) as output.
 
 Enzyme stores the value and adjoint of a variable when marking a type 
 as `Duplicated`. Then the first element represent the value and the second 
@@ -68,49 +67,18 @@ This yields the gradient of `f` in `bx` at point `x = [2.0, 2.0]`.
 `by` is called the seed and has to be set to ``1.0`` in order to compute 
 the gradient. Please note that unlike `Dual`, for `Duplicated` the seed
 is getting zeroed, which is required for correctness in certain cases.
+Note that the output `bx` is initialized to zero on input, and `df` *accumulates* into it.
 
 We can again also handle functions returning a scalar. In this case we mark the
 return value as duplicated. The seed is then going to be an extra,
 last input argument.
-
-```rust,ignore
-#[autodiff(dg, Reverse, Duplicated, Active)]
-fn g(x: &[f32]) -> f32 { ... }
-
-fn main() {
-    let x  = [2.0, 2.0];
-    let bx = [0.0, 0.0];
-    let seed = 1.0;
-    let y = dg(&x, &mut dx, seed);
-    assert!(dy[0] == 6.0 && dy[1] == 2.0);
-}
+```rust
+{{#include ../../samples/tests/reverse/mod.rs:active_return}}
 ```
-
 We can now verify that indeed the reverse mode and forward mode yield the same result. 
 
-```rust,ignore
-#[autodiff(df_f, Forward, Dual, Dual)]
-#[autodiff(df_r, Reverse, Duplicated, Duplicated)]
-fn f(x: &[f32], y: &mut f32) { ... }
-
-fn main() {
-    let x  = [2.0, 2.0];
-    let dx_1 = [1.0, 0.0];
-    let dx_2 = [0.0, 1.0];
-    let mut y = 0.0;
-    let mut dy_f = [0.0, 0.0];
-    df_f(&x, &mut dx_1, &mut y, &mut dy_f[0]);
-    df_f(&x, &mut dx_2, &mut y, &mut dy_f[1]);
-    
-
-    let bx = [0.0, 0.0];
-    let y  = 0.0;
-    let mut dy_r = 1.0;
-    df_r(&x, &mut bx, &mut y, &mut dy_r);
-
-    assert_approx_eq!(dy_f[0], dy_r[0]);
-    assert_approx_eq!(dy_f[1], dy_r[1]);
-}
+```rust
+{{#include ../../samples/tests/reverse/mod.rs:forward_and_reverse}}
 ```
 
 As we can see, the number of calls under Forward mode scales with the number of 
