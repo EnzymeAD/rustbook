@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = [
+        "samples",
+]
+
+[profile.test]
+lto = "fat"
+
+[profile.dev]
+lto = "fat"
+
+[profile.release]
+lto = "fat"
