@@ -33,5 +33,5 @@ In `collect_and_partition_mono_items` we update things.
 In `generate_lto_work` we pass the autodiff worklist to our backend autodiff function doing the actual work. We check there that our autodiff worklist is empty if we don't use fat-lto.
 
 
-`compiler/rustc_codegen_llvm/src/typetree.rs`
+`compiler/rustc_middle/src/ty/mod.rs`
 How to create a typetree or fnctree from a `rustc_middle::ty`
