@@ -46,3 +46,14 @@ export ENZYME_PRINT_MOD_AFTER=1
 export ENZYME_LOOSE_TYPES=1
 ```
 
+For performance experiments and benchmarking we also support
+```
+export ENZYME_NO_MOD_OPT_AFTER=1
+export ENZYME_ENABLE_FNC_OPT=1
+```
+The normal compilation pipeline of Rust-Enzyme is
+1) Run your selected compilation pipeline. If you selected a release build, we will disable vectorization and loop unrolling.
+2) Differentiate your functions.
+3) Run your selected compilation pipeline again on the whole module. This time we do not disable vectorization or loop unrolling.
+
+The two flags above allow you to adjust this default behaviour.
