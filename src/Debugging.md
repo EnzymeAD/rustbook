@@ -41,15 +41,17 @@ export ENZYME_PRINT_TA=1
 export ENZYME_PRINT_AA=1
 export ENZYME_PRINT_PERF=1
 export ENZYME_PRINT=1
-export ENZYME_PRINT_MOD=1
-export ENZYME_PRINT_MOD_AFTER=1
+export ENZYME_PRINT_MOD_BEFORE=1
+export ENZYME_PRINT_MOD_AFTER_ENZYME=1
+export ENZYME_PRINT_MOD_AFTER_OPTS=1
 export ENZYME_LOOSE_TYPES=1
 ```
 
 For performance experiments and benchmarking we also support
-```
+```bash
 export ENZYME_NO_MOD_OPT_AFTER=1
 export ENZYME_ENABLE_FNC_OPT=1
+export ENZYME_NO_VEC_UNROLL=1
 ```
 The normal compilation pipeline of Rust-Enzyme is
 1) Run your selected compilation pipeline. If you selected a release build, we will disable vectorization and loop unrolling.
