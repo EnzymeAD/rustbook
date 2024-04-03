@@ -1,6 +1,4 @@
-#![feature(autodiff)]
-
-// A direct translation of 
+// A direct translation of
 // https://enzyme.mit.edu/index.fcgi/julia/stable/generated/autodiff/#Forward-over-reverse
 
 #[autodiff(ddf, Forward, Dual, Dual, Dual, Dual)]
@@ -13,12 +11,10 @@ fn f(x: &[f32;2], y: &mut [f32;1]) {
     y[0] = x[0] * x[0] + x[1] * x[0]
 }
 
-fn sum2(x: &f32, out: &mut f32) { *out = 2.0 * x; }
-
 #[test]
 fn main() {
     let mut y = [0.0];
-    let mut x = [2.0, 2.0];
+    let x = [2.0, 2.0];
 
     let mut dy = [0.0];
     let mut dx = [1.0, 0.0];
