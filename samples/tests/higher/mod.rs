@@ -15,6 +15,7 @@ fn f(x: &[f32;2], y: &mut [f32;1]) {
 
 fn sum2(x: &f32, out: &mut f32) { *out = 2.0 * x; }
 
+#[test]
 fn main() {
     let mut y = [0.0];
     let mut x = [2.0, 2.0];
