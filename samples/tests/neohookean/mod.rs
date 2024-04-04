@@ -219,10 +219,17 @@ impl NH {
     }
     // https://en.wikipedia.org/wiki/Lam%C3%A9_parameters
     pub fn from_youngs(E: f64, nu: f64) -> Self {
-        Self {
-            lambda: E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)),
-            mu: E / (2.0 * (1.0 + nu)),
-        }
+        Self::from_lame(
+            E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu)),
+            E / (2.0 * (1.0 + nu)),
+        )
+    }
+
+    #[allow(dead_code)]
+    pub fn psi(&self, e: &KM) -> f64 {
+        let mut out = 0.0;
+        psi(e, self, &mut out);
+        out
     }
 
     pub fn stress(&self, e: &KM) -> KM {
@@ -241,18 +248,18 @@ impl NH {
 
 // We can only differentiate free functions, not methods (yet)
 // Helmholtz free energy density
-#[autodiff(d_psi, Reverse, Duplicated, Const, Active)]
-fn psi(e: &KM, nh: &NH) -> f64 {
+#[autodiff(d_psi, ReverseFirst, Duplicated, Const, Duplicated)]
+fn psi(e: &KM, nh: &NH, out: &mut f64) {
     let mu = nh.mu;
     let lambda = nh.lambda;
     let J = e.cauchy_green().det().sqrt();
-    0.25 * lambda * (J * J - 1.0 - 2.0 * J.ln()) + mu * (e.trace() - J.ln())
+    *out = 0.25 * lambda * (J * J - 1.0 - 2.0 * J.ln()) + mu * (e.trace() - J.ln());
 }
 
 #[autodiff(d_stress_enz, Forward, Dual, Const, Dual)]
 fn stress_enz(e: &KM, nh: &NH, tau: &mut KM) {
     let mut dpsi_de = KM::zero();
-    d_psi(&e, &mut dpsi_de, &nh, 1.0);
+    d_psi(&e, &mut dpsi_de, &nh, &mut 0.0, &mut 1.0);
     let b = e.cauchy_green();
     *tau = dpsi_de * b;
 }
@@ -335,7 +342,6 @@ fn check_stress() {
     assert!(diff < 1e-14);
 }
 
-#[cfg(broken)]
 #[test]
 fn check_dstress() {
     let nh = NH::from_youngs(1.0, 0.3);
