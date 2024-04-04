@@ -52,6 +52,7 @@ For performance experiments and benchmarking we also support
 export ENZYME_NO_MOD_OPT_AFTER=1
 export ENZYME_ENABLE_FNC_OPT=1
 export ENZYME_NO_VEC_UNROLL=1
+export ENZYME_NO_SAFETY_CHECKS=1
 ```
 The normal compilation pipeline of Rust-Enzyme is
 1) Run your selected compilation pipeline. If you selected a release build, we will disable vectorization and loop unrolling.
