@@ -11,13 +11,13 @@ Enzyme's TA will create TypeTrees based on usage patterns in the code.
 Due to a suboptimal datastructure this process scales very poorly. 
 Transfer the code (~1200 Lines of C++) to a better suited trie should remove most of this overhead, please reach out if you can help.
 For the meantime, we do initialize TypeTrees for outermost function (those to which you apply '#[autodiff(...)]` based on the Rust types. 
+We also annotate a very small set of recognized LLVM functions with TypeInformation, but this work should be expanded.
 In some real-worl applications (50k LoC), this improved the compile times by over 1000x - reducing them from hours to single minutes. 
 
 ## Duplicated Optimizations
 The key reason for Enzyme offering often excellent performance is that Enzyme does differentiate already optimized LLVM-IR. 
 However, we also (have to) run LLVM's optimization pipeline after differentiating, to make sure that the code which Enzyme generates is optimized properly. 
-This is currently done approximately, but in certain cases some code will be optimized too often, while other code is not getting optimized enough. Tuning this could allow both compile time and runtime improvements.
-
+As a result you should have excellent runtime performance (please fill an issue if not), but at a compile time cost.
 
 ## FAT-LTO 
 The usage of '#[autodiff(...)]' currently requires compiling your project with fat-lto. 
