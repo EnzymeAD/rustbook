@@ -2,7 +2,7 @@
 
 Computing higher order derivatives like hessians can be done with Enzyme by differentiating functions that compute lower order derivatives. 
 This requires that functions are differentiated in the right order, which we currently don't handle.
-As a workaround, we introduce two new AD modes `ForwardFirst` and ReverseFirst` that will be differentiated (and optimized)
+As a workaround, we introduce two new AD modes `ForwardFirst` and `ReverseFirst` that will be differentiated (and optimized)
 before we differentiate the default `Forward` and `Reverse` mode invocations. An example is given below.
 
 
