@@ -1,13 +1,42 @@
 # Current limitations
-
-1) Enzyme currently does only support freestanding functions. We added some support for `self`, but don't link pieces together correctly in all cases. `self` does not exist on llvm-ir level, so it's just a matter of fixing our macro and should be easy to solve.
  
-4) Parallelism: Enzyme currently does not handle Rust parallelism (rayon). Enzyme does (partly) support various parallel paradigms: OpenMP, MPI, CUDA, Rocm, Julia tasks. Enzyme only does need to support the lowest level of parallelism for each language, so adding support for Rust is not hard, but also not a high priority.
+Parallelism: Enzyme currently does not handle Rust parallelism (rayon). 
+Enzyme does (partly) support various parallel paradigms: OpenMP, MPI, CUDA, Rocm, Julia tasks. 
+Enzyme only does need to support the lowest level of parallelism for each language, so adding support for Rust is not hard, but also not a high priority.
 
 
-
-Enzyme does support custom allocators, but Rust-Enzyme does not expose support for it yet. Low priority.
+Enzyme does support custom allocators, but Rust-Enzyme does not expose support for it yet. Lowest priority.  
 
 TODO: Talk about the history of EnzymeAD and the status of the current implementation.  Talk about any current limitations and whether they might be lifted.  Talk about future possibilities and ongoing work.
 
 TODO: web example: https://arbitrandomuser.github.io/thangs/freehandbezier/
+
+## Safety and Soundness
+
+Enzyme currently does assume that the user passes shadow arguments (`dx`, `dy`, ...) of appropriate size. 
+Under Reverse Mode, we additionally assume that shadow arguments are mutable. 
+In both modes we insert automatically checks to verify that `Dual`/`Duplicated` slices have shadow arguments of the right size.
+In Reverse Mode we also adjust the outermost pointer or reference to be mutable. Therefore `&f32` will receive the shadow type `&mut f32`.
+However, we do not check lenght for other types than slices (e.g. enums, Vec). We also do not enforce mutability of inner references, but will warn if we recognize them.
+We do intend to add additional checks over time.
+
+## Compile Times
+Enzyme will often achieve excellent runtime performance, but might increase your compile time by a large factor. 
+For Rust, we already have made significant improvements and have a list of further improvements planed - please reach out if you have time to help here.
+
+### Type Analysis
+Most of the times, Type Analysis (TA) is the reason of large (>5x) compile time increases when using Enzyme. 
+This poster explains why we need to run Type Analysis in the bottom left part: [Poster Link](https://c.wsmoses.com/posters/Enzyme-llvmdev.pdf).
+We intend to increase the number of locations where we pass down Type information based on Rust types, 
+which in turn will reduce the number of locations where Enzyme has to run Type Analysis, which will help compile times.
+
+### Duplicated Optimizations
+The key reason for Enzyme offering often excellent performance is that Enzyme differentiates already optimized LLVM-IR. 
+However, we also (have to) run LLVM's optimization pipeline after differentiating, to make sure that the code which Enzyme generates is optimized properly. 
+As a result you should have excellent runtime performance (please fill an issue if not), but at a compile time cost for running optimizations twice.
+
+### FAT-LTO 
+The usage of '#[autodiff(...)]' currently requires compiling your project with fat-lto. 
+We technically only need lto if the function being differentiated calls functions in other compilation units. 
+Therefore other solutions are possible but this is the most simple one to get started. 
+The compile time overhead of lto is small compared to the current compile time overhead of differentiating larger functions so this limitation is currently not a priority.

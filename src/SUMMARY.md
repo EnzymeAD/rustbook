@@ -9,8 +9,6 @@
   - [Reverse Mode](./usage/rev.md)
   - [Higher Order Derivatives](./usage/higher.md)
 - [Current Limitations](./limitations.md)
-  - [Safety](./limitations/safety.md)
-  - [Compile Times](./limitations/comptime.md)
 - [How to Debug](./Debugging.md)
 # Reference Guide
 - [Other Enzyme frontends](./other_Frontends.md)
