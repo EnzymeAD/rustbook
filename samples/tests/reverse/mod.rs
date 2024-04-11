@@ -20,6 +20,28 @@ samples::test! {
 }
 
 samples::test! {
+    self_duplicated;
+    struct Ogden {
+        k: f64,
+    }
+    impl Ogden {
+        #[autodiff(d_f, Reverse, Duplicated, Const, Active)]
+        fn f(&self, j: f64) -> f64 {
+            self.k * self.k
+        }
+    }
+
+    fn main() {
+        let j = 4.0;
+        let vol = Ogden { k: 1.0 };
+        let mut out = Ogden { k: 0.0 };
+        let s = vol.d_f(&mut out, j, 1.0);
+        let res = 2.0 * vol.k;
+        assert!((s - res).abs() < 1e-15, "{}", out.k);
+    }
+}
+
+samples::test! {
     empty_return;
     // ANCHOR: empty_return
     #[autodiff(df, Reverse, Duplicated, Duplicated)]
