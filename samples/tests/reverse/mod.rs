@@ -26,7 +26,7 @@ samples::test! {
     }
     impl Ogden {
         #[autodiff(d_f, Reverse, Duplicated, Const, Active)]
-        fn f(&self, j: f64) -> f64 {
+        fn f(&self, _j: f64) -> f64 {
             self.k * self.k
         }
     }
@@ -35,9 +35,9 @@ samples::test! {
         let j = 4.0;
         let vol = Ogden { k: 1.0 };
         let mut out = Ogden { k: 0.0 };
-        let s = vol.d_f(&mut out, j, 1.0);
+        let _ = vol.d_f(&mut out, j, 1.0);
         let res = 2.0 * vol.k;
-        assert!((s - res).abs() < 1e-15, "{}", out.k);
+        assert!((out.k - res).abs() < 1e-15, "{} {}", res, out.k);
     }
 }
 
