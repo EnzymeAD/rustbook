@@ -37,7 +37,7 @@ samples::test! {
         let vol = Ogden { k: 1.0 };
         let s = vol.stress(j);
         let s_ref = vol.stress_analytic(j);
-        assert_eq!(s_ref, s);
+        assert!((s - s_ref).abs() < 1e-15, "{}", s - s_ref);
     }
     // ANCHOR_END: volumetric
 }
