@@ -26,7 +26,7 @@ samples::test! {
         }
     }
     impl Volumetric for Ogden {
-        #[autodiff(d_psi, Reverse, Active, Active)]
+        #[autodiff(d_psi, Reverse, Const, Active, Active)]
         fn psi(&self, j: f64) -> f64 {
             self.k * 0.25 * (j * j - 1.0 - 2.0 * j.ln())
         }
