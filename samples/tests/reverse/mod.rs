@@ -20,6 +20,26 @@ samples::test! {
 }
 
 samples::test! {
+    active_only;
+    /// ANCHOR:  active_only
+    #[autodiff(d_f, Reverse, Active, Active)]
+    #[autodiff(d_f2, Reverse, Active, ActiveOnly)]
+    fn f(x: f64) -> f64 {
+        f64::sin(x)
+    }
+
+    fn main() {
+        let x = 1.0;
+        let (_y, d_y) = d_f(x, 1.0);
+        let d2_y = d_f2(x, 1.0);
+        let cos_x = f64::cos(x);
+        assert!((d2_y - d_y).abs() < 1e-15);
+        assert!((cos_x - d_y).abs() < 1e-15);
+    }
+    /// ANCHOR_END: active_only
+}
+
+samples::test! {
     self_duplicated;
     struct Ogden {
         k: f64,
