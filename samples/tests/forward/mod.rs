@@ -1,4 +1,3 @@
-#[cfg(broken)]
 samples::test! {
     empty_return;
     // ANCHOR: empty_return
@@ -35,18 +34,21 @@ samples::test! {
     // ANCHOR_END: dual_return
 }
 
-#[cfg(broken)]
 samples::test! {
     dual_only_return;
     // ANCHOR: dual_only_return
-    #[autodiff(df, Forward, Dual, DualOnly)]
+    #[autodiff(df, Forward, Dual, Dual)]
+    #[autodiff(df2, Forward, Dual, DualOnly)]
     fn f(x: &[f32; 2]) -> f32 { x[0] * x[0] + x[1] * x[0] }
 
     fn main() {
         let x  = [2.0, 2.0];
         let dx = [1.0, 0.0];
-        let dy = df(&x, &dx);
+        let (y, dy) = df(&x, &dx);
+        let dy2 = df2(&x, &dx);
         assert_eq!(dy, 2.0 * x[0] + x[1]);
+        assert_eq!(dy2, dy);
+        assert_eq!(y, f(&x));
     }
     // ANCHOR_END: dual_only_return
 }
