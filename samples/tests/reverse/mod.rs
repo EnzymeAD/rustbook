@@ -103,7 +103,6 @@ samples::test! {
     // ANCHOR_END: active_return
 }
 
-#[cfg(broken)]
 samples::test! {
     forward_and_reverse;
     // ANCHOR: forward_and_reverse
