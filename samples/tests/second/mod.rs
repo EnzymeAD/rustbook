@@ -1,7 +1,7 @@
 samples::test! {
     forward_of_reverse;
     // ANCHOR: forward_of_reverse
-    #[autodiff(df, Reverse, Duplicated, Active)]
+    #[autodiff(df, ReverseFirst, Duplicated, Active)]
     fn f(x: &[f32; 2]) -> f32 {
         x[0] * x[0] + x[1] * x[0]
     }
