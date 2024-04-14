@@ -1,6 +1,6 @@
 samples::test! {
     square;
-    /// ANCHOR: square
+    // ANCHOR: square
     #[autodiff(d_square, Reverse, Duplicated, Active)]
     fn square(x: &f64) -> f64 {
         x * x
@@ -17,6 +17,50 @@ samples::test! {
         assert_eq!(6.0, df_dx);
     }
     // ANCHOR_END: square
+}
+
+samples::test! {
+    active_only;
+    // ANCHOR:  active_only
+    #[autodiff(d_f, Reverse, Active, Active)]
+    #[autodiff(d_f2, Reverse, Active, ActiveOnly)]
+    fn f(x: f64) -> f64 {
+        f64::sin(x)
+    }
+
+    fn main() {
+        let x = 1.0;
+        let (_y, d_y) = d_f(x, 1.0);
+        let d2_y = d_f2(x, 1.0);
+        let cos_x = f64::cos(x);
+        assert!((d2_y - d_y).abs() < 1e-15);
+        assert!((cos_x - d_y).abs() < 1e-15);
+    }
+    // ANCHOR_END: active_only
+}
+
+samples::test! {
+    self_duplicated;
+    // ANCHOR: self_duplicated
+    struct Ogden {
+        k: f64,
+    }
+    impl Ogden {
+        #[autodiff(d_f, Reverse, Duplicated, Const, Active)]
+        fn f(&self, _j: f64) -> f64 {
+            self.k * self.k
+        }
+    }
+
+    fn main() {
+        let j = 4.0;
+        let vol = Ogden { k: 1.0 };
+        let mut out = Ogden { k: 0.0 };
+        let _ = vol.d_f(&mut out, j, 1.0);
+        let res = 2.0 * vol.k;
+        assert!((out.k - res).abs() < 1e-15, "{} {}", res, out.k);
+    }
+    // ANCHOR_END: self_duplicated
 }
 
 samples::test! {
@@ -59,7 +103,6 @@ samples::test! {
     // ANCHOR_END: active_return
 }
 
-#[cfg(broken)]
 samples::test! {
     forward_and_reverse;
     // ANCHOR: forward_and_reverse
