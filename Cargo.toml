@@ -1,6 +1,12 @@
 [workspace]
 resolver = "2"
-members = [ "integration",
+members = [
+        "integration",
+        "samples",
+        "samples-loose-types",
+]
+default-members = [
+        "integration",
         "samples",
 ]
 
