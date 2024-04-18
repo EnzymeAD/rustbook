@@ -1,23 +1,16 @@
-#![feature(autodiff)]
+samples::test! {
+    reverse_duplicated_active;
+    #[autodiff(d_array, Reverse, Duplicated, Active)]
+    fn array(arr: &[[[f32; 2]; 2]; 2]) -> f32 {
+        arr[0][0][0] * arr[1][1][1]
+    }
 
-#[autodiff(d_array, Reverse, Active, Duplicated)]
-fn array(arr: &[[[f32; 2]; 2]; 2]) -> f32 {
-    arr[0][0][0] * arr[1][1][1]
-}
-
-fn main() {
-    let arr = [[[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]]];
-    let mut d_arr = [[[0.0; 2]; 2]; 2];
-
-    d_array(&arr, &mut d_arr, 1.0);
-
-    dbg!(&d_arr);
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
     fn main() {
-        super::main()
+        let arr = [[[2.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 3.0]]];
+        let mut b_arr = [[[0.0; 2]; 2]; 2];
+
+        let y = d_array(&arr, &mut b_arr, 1.0);
+        assert_eq!(6.0, y);
+        assert_eq!([[[3.0, 0.0], [0.0; 2]], [[0.0; 2], [0.0, 2.0]]], b_arr);
     }
 }
