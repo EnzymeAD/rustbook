@@ -1,3 +1,3 @@
 #![feature(autodiff)]
 
-mod examples;
+mod neohookean;

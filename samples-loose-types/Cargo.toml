@@ -1,0 +1,8 @@
+[package]
+name = "samples-loose-types"
+version = "0.1.0"
+edition = "2021"
+description = "Contains versions of samples that require ENZYME_LOOSE_TYPES=1 to compile"
+
+[dependencies]
+samples = { version = "0.1.0", path = "../samples" }
