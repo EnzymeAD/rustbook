@@ -1,3 +1,6 @@
+//! This module should replace samples/tests/neohookean/mod.rs when it can build
+//! without ENZYME_LOOSE_TYPES=1.
+
 #![allow(non_snake_case)]
 
 use std::ops::{Add, Mul, Sub};
@@ -231,7 +234,6 @@ impl NH {
         tau
     }
 
-    #[allow(dead_code)]
     pub fn d_stress(&self, e: &KM, de: &KM) -> KM {
         let mut tau = KM::zero();
         let mut dtau = KM::zero();
@@ -269,7 +271,6 @@ pub mod analytic {
         0.5 * lambda * (J * J - 1.0) * I + 2.0 * mu * e
     }
 
-    #[allow(dead_code)]
     pub fn d_stress(e: &KM, ddudx: &Mat3x3, nh: &NH) -> KM {
         let lambda = nh.lambda;
         let mu = nh.mu;
@@ -337,7 +338,6 @@ fn check_stress() {
     assert!(diff < 1e-14);
 }
 
-#[cfg(broken)] // This case requires ENZYME_LOOSE_TYPES=1; see samples-loose-types
 #[test]
 fn check_dstress() {
     let nh = NH::from_youngs(1.0, 0.3);
