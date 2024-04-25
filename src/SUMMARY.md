@@ -1,7 +1,6 @@
 # Summary
 
 # User Guide
-- [What is Autodiff?](./chapter_1.md)
 - [Motivation](./motivation.md)
 - [Prior Art](./prior_art.md)
 - [Usage](./usage/usage.md)
@@ -9,6 +8,7 @@
   - [Reverse Mode](./usage/rev.md)
   - [Higher Order Derivatives](./usage/higher.md)
 - [Current Limitations](./limitations.md)
+- [History and ecosystem](./ecosystem.md)
 - [How to Debug](./Debugging.md)
 # Reference Guide
 - [Other Enzyme frontends](./other_Frontends.md)
