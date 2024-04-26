@@ -7,7 +7,7 @@ Enzyme only does need to support the lowest level of parallelism for each langua
 
 Enzyme does support custom allocators, but Rust-Enzyme does not expose support for it yet. Lowest priority.  
 
-TODO: Talk about the history of EnzymeAD and the status of the current implementation.  Talk about any current limitations and whether they might be lifted.  Talk about future possibilities and ongoing work.
+<> (TODO: Talk about the history of EnzymeAD and the status of the current implementation.  Talk about any current limitations and whether they might be lifted.  Talk about future possibilities and ongoing work.)
 
 TODO: web example: https://arbitrandomuser.github.io/thangs/freehandbezier/
 
@@ -36,7 +36,7 @@ However, we also (have to) run LLVM's optimization pipeline after differentiatin
 As a result you should have excellent runtime performance (please fill an issue if not), but at a compile time cost for running optimizations twice.
 
 ### FAT-LTO 
-The usage of '#[autodiff(...)]' currently requires compiling your project with fat-lto. 
+The usage of `#[autodiff(...)]` currently requires compiling your project with fat-lto. 
 We technically only need lto if the function being differentiated calls functions in other compilation units. 
 Therefore other solutions are possible but this is the most simple one to get started. 
 The compile time overhead of lto is small compared to the current compile time overhead of differentiating larger functions so this limitation is currently not a priority.
