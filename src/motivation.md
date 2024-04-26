@@ -22,7 +22,11 @@ We propose to add [automatic differentiation](https://en.wikipedia.org/wiki/Auto
 
 TODO with examples.  What kind of problems does this solve that nothing else solves?
 
-Autodiff is widely used to evaluate gradients for numerical optimization, which is otherwise intractable for a large number of parameters. Indeed, suppose we have a scalar-valued loss function $f(\theta)$ where the parameter vector $\theta$ has length $n$. If the cost to evaluate $f(x)$ once is $c$ (which will often be $O(n)$), then evaluating the gradient $\partial f/\partial x$ costs less than $3n$ with autodiff or tedious and brittle by-hand implementation, but $cn$ otherwise. Optimization of systems of size $n$ in the hundreds to billions are common in applications such as calibration, data assimilation, and design optimization of physical models, in perception and control systems for robotics, and machine learning.
+Autodiff is widely used to evaluate gradients for numerical optimization, which is otherwise intractable for a large number of parameters. 
+Indeed, suppose we have a scalar-valued loss function \\(f(\theta)\\) where the parameter vector \\(\theta\\) has length \\(n\\). 
+If the cost to evaluate \\(f(x)\\) once is \\(c\\) (which will often be \\(O(n)\\)), then evaluating the gradient \\(\partial f/\partial x\\) 
+costs less than \\(3n\\) with autodiff or tedious and brittle by-hand implementation, but \\(cn\\) otherwise. 
+Optimization of systems of size $n$ in the hundreds to billions are common in applications such as calibration, data assimilation, and design optimization of physical models, in perception and control systems for robotics, and machine learning.
 
 Derivatives are also instrumental to thermodynamically admissible physical models, in which models are developed using non-observable free energy functionals and dissipation potentials, with observable dynamics represented by their derivatives. Commercial engineering software requires users to implement these derivatives by hand (e.g., Abaqus [`UHYPER`](https://abaqus-docs.mit.edu/2017/English/SIMACAESUBRefMap/simasub-c-uhyper.htm#simasub-c-uhyper-t-vartodefine1) and [`UMAT`](https://abaqus-docs.mit.edu/2017/English/SIMACAESUBRefMap/simasub-c-umat.htm#simasub-c-umat-t-vartodefine1)) and constitutive modeling papers routinely spend many pages detailing how to efficiently compute the necessary derivatives since these are among the most computationally intensive parts of simulation-based workflows and numerical stability is necessary.
 
