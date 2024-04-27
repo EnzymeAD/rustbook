@@ -1,0 +1,5 @@
+error: Active can not be used for this type
+ --> tests/ui/wrong_activity1.rs:4:10
+  |
+4 | fn f1(x: &f64) -> f64 {
+  |          ^^^^

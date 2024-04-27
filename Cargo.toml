@@ -1,13 +1,16 @@
 [workspace]
 resolver = "2"
-members = [
-        "integration",
+
+members = [ "integration",
         "samples",
-        "samples-loose-types",
+        "samples-loose-types", 
+        "ui",
 ]
+
 default-members = [
         "integration",
         "samples",
+        "ui",
 ]
 
 [profile.test]
