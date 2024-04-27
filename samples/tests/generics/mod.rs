@@ -1,6 +1,6 @@
 samples::test! {
     generic;
-    // ANCHOR: square
+    // ANCHOR: generic
     #[autodiff(d_square, Reverse, Duplicated, Active)]
     fn square<T: std::ops::Mul<Output = T> + Copy>(x: &T) -> T {
         *x * *x
