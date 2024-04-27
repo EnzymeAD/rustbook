@@ -1,5 +1,6 @@
 #![feature(autodiff)]
 
+mod generics;
 mod forward;
 mod reverse;
 mod second;
