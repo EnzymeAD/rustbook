@@ -35,6 +35,13 @@ Enzyme does support custom allocators, but Rust-Enzyme does not expose support f
 Please let us know if you have an application that can benefit from a custom allocator and autodiff,
 otherwise this likely won't be implemented in the forseeable future.
 
+### Checkpointing:
+While Enzyme is very fast due to running optimizations before AD, we don't explore all the classical AutoDiff tricks yet. Namely we do miss support for adjusting checkpointing decisions, which describes the question of whether we want to cache or recompute values needed for the gradient computations. It generally lies in NP to find the optimal balance for each given program, but there are good approximations. You can think of it in terms of custom allocators. Replacing the algorithm might affect your runtime performance, but does not affect the result of your function calls. In the future it might be interesting to let the user interact with checkpointing.
+
+### Supporting other Codegen backends:
+Enzyme core consists of ~50k LoC. Most of the rules around generating derivatives for instructions are written in LLVM Tablegen.td declarations and as such it should be relatively easy to port them. Enzyme core also includes various experimental features which we don't need on the Rust side, an implementation for another codegen backend could therefore also end up a bit smaller.
+The cranelift backend would also benefit from ABI compability, which makes it very easy to test correctness of a new autodiff tool against Enzyme. Our modifications to `rustc_codegen_ssa` and previous layers of rustc are written in a generic way, s.t. no changes would be needed there to enable support for additional backends.
+
 ### GPU / TPU / IPU / ... support.
 Enzyme core supports differentiating CUDA/ROCm Kernels. 
 There are various ways towards exposing this capabilities to Rust.
@@ -46,6 +53,3 @@ you are also working on GPU programming in Rust.
 Enzyme partly supports multiple MLIR dialects. MLIR can offer great runtime
 performance benefits for certain workloads. It would be nice to have a 
 `rustc_codegen_mlir`, but there is a very large number of open questions around the design.
-
-### Checkpointing
-While Enzyme is very fast due to running optimizations before AD, we don't explore all the classical AutoDiff tricks yet. Namely we do miss support for adjusting checkpointing decisions, which describes the question of whether we want to cache or recompute values needed for the gradient computations. It generally lies in NP to find the optimal balance for each given program, but there are good approximations. You can think of it in terms of custom allocators. Replacing the algorithm might affect your runtime performance, but does not affect the result of your function calls. In the future it might be interesting to let the user interact with checkpointing.
