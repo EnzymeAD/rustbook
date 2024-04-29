@@ -191,16 +191,3 @@ fn backprop(images: (&[f32], &[f32]), weights: (&[f32], &[f32]), dweights: (&mut
 }
 ```
 
-Here are actual (compiling) examples:
-
-https://github.com/EnzymeAD/rust/tree/master/library/autodiff/examples
-
-
-We also ask for a wildcard allowance to recognize ENZYME_ environment variables for debug or profiling purposes. Here are the ones we currently use:
-
-https://github.com/EnzymeAD/rust#enzyme-config
-
-While Enzyme is very fast due to running optimizations before AD, we don't explore all the classical AutoDiff tricks yet. Namely we do miss support for adjusting checkpointing decisions, which describes the question of whether we want to cache or recompute values needed for the gradient computations. It generally lies in NP to find the optimal balance for each given program, but there are good approximations. You can think of it in terms of custom allocators. Replacing the algorithm might affect your runtime performance, but does not affect the result of your function calls. In the future it might be interesting to let the user interact with checkpointing.
-
-Finally, let's assume that you want to use [differentiable rendering](https://arxiv.org/abs/2006.12057), but someone added a "fast" version of the [inverse square root function](https://en.wikipedia.org/wiki/Fast_inverse_square_root#Overview_of_the_code) to your render engine, breaking your AutoDiff tool, which can't figure out how `i  = 0x5f3759df - ( i >> 1 );` would affect your gradient. AutoDiff packages for this reason allow declaring a custom derivative `f'` for a function `f`. In such a case the AD tool will not look at the implementation of `f` and directly use the user provided `f'`. Jax documentation also has a large list of other reasons due to which you might want to use custom derivatives: https://jax.readthedocs.io/en/latest/notebooks/Custom_derivative_rules_for_Python_code.html
-Julia has a whole ecosystem called [ChainRules.jl](https://juliadiff.org/ChainRulesCore.jl/stable/) around custom derivatives. Enzyme does support custom derivatives, but we do not expose this feature on the Rust side yet.

@@ -1,24 +1,17 @@
 # Current limitations
  
-Parallelism: Enzyme currently does not handle Rust parallelism (rayon). 
-Enzyme does (partly) support various parallel paradigms: OpenMP, MPI, CUDA, Rocm, Julia tasks. 
-Enzyme only does need to support the lowest level of parallelism for each language, so adding support for Rust is not hard, but also not a high priority.
-
-
-Enzyme does support custom allocators, but Rust-Enzyme does not expose support for it yet. Lowest priority.  
-
-<> (TODO: Talk about the history of EnzymeAD and the status of the current implementation.  Talk about any current limitations and whether they might be lifted.  Talk about future possibilities and ongoing work.)
-
-TODO: web example: https://arbitrandomuser.github.io/thangs/freehandbezier/
 
 ## Safety and Soundness
-
 Enzyme currently does assume that the user passes shadow arguments (`dx`, `dy`, ...) of appropriate size. 
 Under Reverse Mode, we additionally assume that shadow arguments are mutable. 
 In both modes we insert automatically checks to verify that `Dual`/`Duplicated` slices have shadow arguments of the right size.
 In Reverse Mode we also adjust the outermost pointer or reference to be mutable. Therefore `&f32` will receive the shadow type `&mut f32`.
 However, we do not check lenght for other types than slices (e.g. enums, Vec). We also do not enforce mutability of inner references, but will warn if we recognize them.
 We do intend to add additional checks over time.
+
+## ABI adjustments
+In some cases, a function parameter might get lowered in a way that we currently don't handle correctly,
+leading to a compile time type missmatch in the `rustc_codegen_llvm` backend. Here are some [examples](https://github.com/EnzymeAD/rust/issues/105).
 
 ## Compile Times
 Enzyme will often achieve excellent runtime performance, but might increase your compile time by a large factor. 
