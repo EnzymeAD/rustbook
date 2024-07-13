@@ -3,22 +3,28 @@
 Since Rust-AD is still in early development, crashes are not unlikely.
 
 ### Frontend crashes
-The first case is that you cause a crash of our Rust frontend.
-Luckily, these are trivial to debug. In most cases it will be enough
-to remove the whole body of the function being differentiated 
-(or consider replacing it with `loop {}`,
-which matches almost every return type). 
-Such a reproducer is trivial to fix, so please let us know!
+If you see a proper Rust stacktrace after a compilation failure, our frontend (thus rustc) has likely crashed.
+It should often be trivial to create a minimal reproducer, by deleting most of the body of the 
+function being differentiated, or by replacing the function body with a `loop {}` statement.
+Please create an issue with such a reproducer, it will likely be easy to fix!
 
 For the unexpected case, that you produce an ICE in our frontend that 
 is harder to minimize, please consider using [icemelter](https://github.com/langston-barrett/icemelter).
 
 ### Backend crashes
+If after a compilation failure you are greeted by a large amount of LLVM-IR code,
+then our Enzyme backend likely failed to compile your code.
+These cases are harder to debug, so your help is highly appreciated.
+
+The final goal here is to reproduce your bug in the Enzyme [compiler explorer](https://enzyme.mit.edu/explorer/),
+in order to create a bug report in the [Enzyme core](https://github.com/EnzymeAD/Enzyme/issues) repository.
+
 Few lines of Rust code will expand into much larger LLVM-IR.
-It is therefore beneficial to reduce a Rust reproducer as 
+It is therefore important to reduce a Rust reproducer as 
 far as possible, before trying to minimize the generated LLVM-IR.
 While manual minimization can not always be avoided, here are 
-some tools, that might help.
+some tools, that might help. Once you have a minimal Rust example (strongly preferable without using other crates),
+then please create an issue.
 
 This is probably the most simple automated approach:
 [cargo-minimize](https://github.com/Nilstrieb/cargo-minimize)
