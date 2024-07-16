@@ -15,17 +15,33 @@ is harder to minimize, please consider using [icemelter](https://github.com/lang
 If after a compilation failure you are greeted by a large amount of LLVM-IR code,
 then our Enzyme backend likely failed to compile your code.
 These cases are harder to debug, so your help is highly appreciated.
+Please also keep in mind, that release builds are usually much more likely to work at the moment.
 
 The final goal here is to reproduce your bug in the Enzyme [compiler explorer](https://enzyme.mit.edu/explorer/),
 in order to create a bug report in the [Enzyme core](https://github.com/EnzymeAD/Enzyme/issues) repository.
 
-Few lines of Rust code will expand into much larger LLVM-IR.
-It is therefore important to reduce a Rust reproducer as 
-far as possible, before trying to minimize the generated LLVM-IR.
-While manual minimization can not always be avoided, here are 
-some tools, that might help. Once you have a minimal Rust example (strongly preferable without using other crates),
-then please create an issue.
+We have an environment variable called `ENZYME_OPT` to help with this. It will print the whole LLVM-IR module,
+along with dummy functions called `enzyme_opt_dbg_helper_<i>`. A potential workflow on Linux could look like:  
 
+`cargo clean && ENZYME_OPT=1 cargo +enzyme build &> out.ll`  
+This also captures a few warnings and info messages above and below your module.
+Open out.ll and remove every line above `; ModuleID = <SomeHash>` and every line below the last DILocation,
+e.g. below `!43760 = !DILocation(line: 297, column: 5, scope: !43746)`. The actual numbers will depend on your code.  
+
+`llvm-extract -S --func=f --recursive --rfunc="enzyme_opt_helper_*" out.ll -o mwe.ll`
+Please also adjust the name passed with the `--func` flag if your function isn't called `f`. Either look up the correct
+llvm-ir name for your function in out.ll, or use the `#[no_mangle]` attribute on the function which you differentiate, in which case 
+you can pass the original Rust function name to this flag.
+
+Afterwards, you should be able to copy and paste your mwe example into our [compiler explorer](https://enzyme.mit.edu/explorer/) and 
+hopefully reproduce the same Enzyme error, which you got when you tried to compile your original Rust code.
+Please select `LLVM IR` as a language and `opt 17` as your compiler and replace the LLVM-IR example with your final mwe.ll content.
+
+You will quickly note that even small Rust function can generate large llvm-ir reproducer. Please try to get your llvm-ir function below
+100 lines, by reducing the Rust function to be differentiated as far as possible. This will significantly speed up the bug fixing process.
+Please also try to post both, the compiler-explorer link with your llvm-ir reproducer, as well as a self-contained Rust reproducer.
+
+There are a few solutions to help you with minimizing the Rust reproducer.
 This is probably the most simple automated approach:
 [cargo-minimize](https://github.com/Nilstrieb/cargo-minimize)
 
@@ -41,7 +57,7 @@ Potentially also
 To support you while debugging, we have added support for various environment variables,
 which allow changing the behaviour of Enzyme, without recompiling rustc.
 If you change your environment variables, you may need to run `cargo clean` to see the new behaviour.
-We currently support:
+We currently support the following debug variables:
 ```bash
 export ENZYME_PRINT_TA=1
 export ENZYME_PRINT_AA=1
@@ -51,6 +67,7 @@ export ENZYME_PRINT_MOD_BEFORE=1
 export ENZYME_PRINT_MOD_AFTER_ENZYME=1
 export ENZYME_PRINT_MOD_AFTER_OPTS=1
 export ENZYME_LOOSE_TYPES=1
+export ENZYME_OPT=1
 ```
 
 For performance experiments and benchmarking we also support
