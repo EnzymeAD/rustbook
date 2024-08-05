@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 samples = { version = "0.1.0", path = "../samples" }
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(broken)'] }
