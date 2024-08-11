@@ -57,28 +57,36 @@ Potentially also
 To support you while debugging, we have added support for various environment variables,
 which allow changing the behaviour of Enzyme, without recompiling rustc.
 If you change your environment variables, you may need to run `cargo clean` to see the new behaviour.
-We currently support the following debug variables:
+We currently support the following `RUSTFLAG` values for autodiff:
 ```bash
-export ENZYME_PRINT_TA=1
-export ENZYME_PRINT_AA=1
-export ENZYME_PRINT_PERF=1
-export ENZYME_PRINT=1
-export ENZYME_PRINT_MOD_BEFORE=1
-export ENZYME_PRINT_MOD_AFTER_ENZYME=1
-export ENZYME_PRINT_MOD_AFTER_OPTS=1
-export ENZYME_LOOSE_TYPES=1
-export ENZYME_OPT=1
+PrintTA // Print TypeAnalysis information
+PrintAA // Print ActivityAnalysis information
+PrintPerf // Print AD related Performance warnings
+Print // Print all of the above
+PrintModBefore // Print the whole LLVM-IR module before running opts
+PrintModAfterOpts // Print the whole LLVM-IR module after running opts, before AD
+PrintModAfterEnzyme // Print the whole LLVM-IR module after running opts and AD
+LooseTypes // Risk incorect derivatives instead of aborting when missing Type Info 
+OPT // Most Important debug helper: Print a Module that can run with llvm-opt + enzyme
 ```
 
 For performance experiments and benchmarking we also support
-```bash
-export ENZYME_NO_MOD_OPT_AFTER=1
-export ENZYME_ENABLE_FNC_OPT=1
-export ENZYME_NO_VEC_UNROLL=1
-export ENZYME_NO_SAFETY_CHECKS=1
-export ENZYME_INLINE=1
-export ENZYME_ALT_PIPELINE=1
 ```
+NoModOptAfter // We won't optimize the whole LLVM-IR Module after AD
+EnableFncOpt // We will optimize each derivative function generated individually
+NoVecUnroll // Disables vectorization and loop unrolling
+NoSafetyChecks // Disables Enzyme specific safety checks
+RuntimeActivity // Enables the runtime activity feature from Enzyme 
+Inline // Instructs Enzyme to apply additional inlining beyond LLVM's default
+AltPipeline // Don't optimize IR before AD, but optimize the whole module twice after AD
+```
+
+You can combine multiple `RUSTFLAG` values using a comma as separator:
+```bash
+RUSTFLAGS="-Z autodiff=LooseTypes,NoVecUnroll" cargo +enzyme build
+```
+
+
 The normal compilation pipeline of Rust-Enzyme is
 1) Run your selected compilation pipeline. If you selected a release build, we will disable vectorization and loop unrolling.
 2) Differentiate your functions.
