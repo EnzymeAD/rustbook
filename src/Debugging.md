@@ -53,11 +53,10 @@ Otherwise we have various alternatives, including
 Potentially also
 [creduce](https://github.com/csmith-project/creduce)
 
-### Supported Environment Variables
-To support you while debugging, we have added support for various environment variables,
+### Supported RUSTFLAGS
+To support you while debugging, we have added support for an experimental `-Z autodiff` flag to `RUSTFLAGS`,
 which allow changing the behaviour of Enzyme, without recompiling rustc.
-If you change your environment variables, you may need to run `cargo clean` to see the new behaviour.
-We currently support the following `RUSTFLAG` values for autodiff:
+We currently support the following values for `autodiff`:
 ```bash
 PrintTA // Print TypeAnalysis information
 PrintAA // Print ActivityAnalysis information
@@ -81,7 +80,7 @@ Inline // Instructs Enzyme to apply additional inlining beyond LLVM's default
 AltPipeline // Don't optimize IR before AD, but optimize the whole module twice after AD
 ```
 
-You can combine multiple `RUSTFLAG` values using a comma as separator:
+You can combine multiple `autodiff` values using a comma as separator:
 ```bash
 RUSTFLAGS="-Z autodiff=LooseTypes,NoVecUnroll" cargo +enzyme build
 ```
