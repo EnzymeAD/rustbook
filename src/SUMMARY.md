@@ -3,6 +3,7 @@
 # User Guide
 - [Motivation](./motivation.md)
 - [Prior Art](./prior_art.md)
+- [Installation](./installation.md)
 - [Usage](./usage/usage.md)
   - [Forward Mode](./usage/fwd.md)
   - [Reverse Mode](./usage/rev.md)
