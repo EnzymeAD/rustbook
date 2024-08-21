@@ -25,8 +25,9 @@ along with dummy functions called `enzyme_opt_dbg_helper_<i>`. A potential workf
 
 `RUSTFLAGS="-Z autodiff=OPT" cargo +enzyme build --release &> out.ll`  
 This also captures a few warnings and info messages above and below your module.
-Open out.ll and remove every line above `; ModuleID = <SomeHash>` and every line below the last DILocation,
-e.g. below `!43760 = !DILocation(line: 297, column: 5, scope: !43746)`. The actual numbers will depend on your code.  
+Open out.ll and remove every line above `; ModuleID = <SomeHash>`. Now look at the end of the file and remove everything that's not part of LLVM-IR, i.e. remove errors and warnings. The last line of your LLVM-IR will start with `!<someNumber> = `, i.e.
+`!40831 = !{i32 0, i32 1037508, i32 1037538, i32 1037559}` or `!43760 = !DILocation(line: 297, column: 5, scope: !43746)`.
+The actual numbers will depend on your code.  
 
 `llvm-extract -S --func=f --recursive --rfunc="enzyme_opt_helper_*" out.ll -o mwe.ll`
 Please also adjust the name passed with the `--func` flag if your function isn't called `f`. Either look up the correct
