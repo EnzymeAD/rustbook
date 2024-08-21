@@ -20,10 +20,10 @@ Please also keep in mind, that release builds are usually much more likely to wo
 The final goal here is to reproduce your bug in the Enzyme [compiler explorer](https://enzyme.mit.edu/explorer/),
 in order to create a bug report in the [Enzyme core](https://github.com/EnzymeAD/Enzyme/issues) repository.
 
-We have an environment variable called `ENZYME_OPT` to help with this. It will print the whole LLVM-IR module,
+We have an environment variable called `OPT` to help with this. It will print the whole LLVM-IR module,
 along with dummy functions called `enzyme_opt_dbg_helper_<i>`. A potential workflow on Linux could look like:  
 
-`cargo clean && ENZYME_OPT=1 cargo +enzyme build &> out.ll`  
+`RUSTFLAGS="-Z autodiff=OPT" cargo +enzyme build --release &> out.ll`  
 This also captures a few warnings and info messages above and below your module.
 Open out.ll and remove every line above `; ModuleID = <SomeHash>` and every line below the last DILocation,
 e.g. below `!43760 = !DILocation(line: 297, column: 5, scope: !43746)`. The actual numbers will depend on your code.  
@@ -35,7 +35,7 @@ you can pass the original Rust function name to this flag.
 
 Afterwards, you should be able to copy and paste your mwe example into our [compiler explorer](https://enzyme.mit.edu/explorer/) and 
 hopefully reproduce the same Enzyme error, which you got when you tried to compile your original Rust code.
-Please select `LLVM IR` as a language and `opt 17` as your compiler and replace the LLVM-IR example with your final mwe.ll content.
+Please select `LLVM IR` as a language and `opt 20` as your compiler and replace the LLVM-IR example with your final mwe.ll content.
 
 You will quickly note that even small Rust function can generate large llvm-ir reproducer. Please try to get your llvm-ir function below
 100 lines, by reducing the Rust function to be differentiated as far as possible. This will significantly speed up the bug fixing process.
