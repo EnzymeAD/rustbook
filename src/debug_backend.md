@@ -30,7 +30,7 @@ Once you have both, run the following command:
 ```sh
 <path/to/opt out.ll> -load-pass-plugin=/path/to/LLVMEnzyme-19.so -passes="enzyme" -S 
 ```
-If your previous step, you will now see the same error as you saw when compiling your Rust code with Cargo. 
+If the previous step succeeded, you are going to see the same error that you saw when compiling your Rust code with Cargo. 
 If you fail to get the same error, please open an issue in the Rust repository. If you succeed, congrats! 
 The file is still huge, so let's automatically minimize it.
 
