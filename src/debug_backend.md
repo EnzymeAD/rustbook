@@ -28,7 +28,7 @@ Find your path to the opt binary, with a path similar to
 Also find `LLVMEnzyme-19.<so/dll/dylib>` path, similar to `/rust/build/target-tripple/enzyme/build/Enzyme/LLVMEnzyme-19`. 
 Once you have both, run the following command:
 ```sh
-path/to/your/opt out.ll -load-pass-plugin=/path/to/your/LLVMEnzyme-19.so -passes="enzyme" -S 
+<path/to/opt out.ll> -load-pass-plugin=/path/to/LLVMEnzyme-19.so -passes="enzyme" -S 
 ```
 If your previous step, you will now see the same error as you saw when compiling your Rust code with Cargo. 
 If you fail to get the same error, please open an issue in the Rust repository. If you succeed, congrats! 
@@ -37,7 +37,7 @@ The file is still huge, so let's automatically minimize it.
 ## 3) Minimize your LLVM-IR reproducer
 First find your llvm-extract binary, it's in the same folder as your opt binary. Then run:
 ```sh
-path/to/your/llvm-extract -S --func=<your-llvm-fnc-name> --recursive --rfunc="enzyme_opt_helper_*" out.ll -o mwe.ll 
+<path/to/llvm-extract> -S --func=<name> --recursive --rfunc="enzyme_opt_helper_*" out.ll -o mwe.ll 
 ```
 Please adjust the name passed with the `--func` flag. 
 You can either apply the `#[no_mangle]` attribute to the function you differentiate,
@@ -64,7 +64,7 @@ If you just get a segfault there is no sensible error message and not much to do
 Otherwise, create a script.sh file containing
 ```sh
 #!/bin/bash
-<path/to/your/opt> $1 -load-pass-plugin=/path/to/your/LLVMEnzyme-19.so -passes="enzyme" \
+<path/to/your/opt> $1 -load-pass-plugin=/path/to/LLVMEnzyme-19.so -passes="enzyme" \
     |& grep "/some/path.cpp:686: void llvm::CallInst::init"
 ```
 Experiment a bit with which error message you pass to grep. It should be long enough to make sure that the error is unique. 
@@ -87,8 +87,8 @@ Please create an issue on [https://github.com/EnzymeAD/Enzyme/issues](github) an
 
 
 # Minimize Rust code
-Beyond having a minimal LLVM-IR reproducer, it is also helpful to have a minimal Rust reproducer without dependencies, 
-because it allows us to add it as a testcase to CI, to avoid regressions even after fixing the bug.
+Beyond having a minimal LLVM-IR reproducer, it is also helpful to have a minimal Rust reproducer without dependencies.
+This allows us to add it as a testcase to CI once we fix it, which avoids regressions for the future.
 
 There are a few solutions to help you with minimizing the Rust reproducer.
 This is probably the most simple automated approach:
