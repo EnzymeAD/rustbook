@@ -12,6 +12,8 @@
   - [Future Work](./future_work.md)
 - [History and ecosystem](./ecosystem.md)
 - [How to Debug](./Debugging.md)
+  - [Debug the backend](./debug_backend.md)
+  - [Debug and Profile flags](./debug_flags.md)
 # Reference Guide
 - [Other Enzyme frontends](./other_Frontends.md)
 - [Forward Mode](./fwd.md)
