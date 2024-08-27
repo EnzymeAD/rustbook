@@ -2,7 +2,7 @@
  
 
 ## Safety and Soundness
-Enzyme currently does assume that the user passes shadow arguments (`dx`, `dy`, ...) of appropriate size. 
+Enzyme currently assumes that the user passes shadow arguments (`dx`, `dy`, ...) of appropriate size. 
 Under Reverse Mode, we additionally assume that shadow arguments are mutable. 
 In both modes we insert automatically checks to verify that `Dual`/`Duplicated` slices have shadow arguments of the right size.
 In Reverse Mode we also adjust the outermost pointer or reference to be mutable. Therefore `&f32` will receive the shadow type `&mut f32`.
