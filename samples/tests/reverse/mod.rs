@@ -25,7 +25,7 @@ samples::test! {
     #[autodiff(d_f, Reverse, Active, Active)]
     #[autodiff(d_f2, Reverse, Active, ActiveOnly)]
     fn f(x: f64) -> f64 {
-        f64::sin(x)
+        f64::sin(x) + 1.0
     }
 
     fn main() {
@@ -33,8 +33,10 @@ samples::test! {
         let (_y, d_y) = d_f(x, 1.0);
         let d2_y = d_f2(x, 1.0);
         let cos_x = f64::cos(x);
-        assert!((d2_y - d_y).abs() < 1e-15);
+        println!("d_y: {}, d2_y: {}, cos_x: {}", d_y, d2_y, cos_x);
         assert!((cos_x - d_y).abs() < 1e-15);
+        // This one fails in release mode
+        assert!((cos_x - d2_y).abs() < 1e-15);
     }
     // ANCHOR_END: active_only
 }
@@ -83,6 +85,7 @@ samples::test! {
     }
     // ANCHOR_END: empty_return
 }
+
 
 samples::test! {
     active_return;
