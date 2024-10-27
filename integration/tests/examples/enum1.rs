@@ -1,6 +1,7 @@
 #[cfg(broken)]
 samples::test! {
     f32_i32;
+    use std::autodiff::autodiff;
     enum Foo {
         A(f32),
         B(i32),

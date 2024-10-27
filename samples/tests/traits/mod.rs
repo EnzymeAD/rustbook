@@ -1,6 +1,7 @@
 samples::test! {
     volumetric;
     /// ANCHOR: volumetric
+    use std::autodiff::autodiff;
     trait Volumetric {
         /// Strain energy density
         fn psi(&self, j: f64) -> f64;

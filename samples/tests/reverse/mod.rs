@@ -1,6 +1,7 @@
 samples::test! {
     square;
     // ANCHOR: square
+    use std::autodiff::autodiff;
     #[autodiff(d_square, Reverse, Duplicated, Active)]
     fn square(x: &f64) -> f64 {
         x * x
@@ -22,6 +23,7 @@ samples::test! {
 samples::test! {
     active_only;
     // ANCHOR:  active_only
+    use std::autodiff::autodiff;
     #[autodiff(d_f, Reverse, Active, Active)]
     #[autodiff(d_f2, Reverse, Active, ActiveOnly)]
     fn f(x: f64) -> f64 {
@@ -44,6 +46,7 @@ samples::test! {
 samples::test! {
     self_duplicated;
     // ANCHOR: self_duplicated
+    use std::autodiff::autodiff;
     struct Ogden {
         k: f64,
     }
@@ -68,6 +71,7 @@ samples::test! {
 samples::test! {
     empty_return;
     // ANCHOR: empty_return
+    use std::autodiff::autodiff;
     #[autodiff(df, Reverse, Duplicated, Duplicated)]
     fn f(x: &[f32; 2], y: &mut f32) {
         *y = x[0] * x[0] + x[1] * x[0];
@@ -90,6 +94,7 @@ samples::test! {
 samples::test! {
     active_return;
     // ANCHOR: active_return
+    use std::autodiff::autodiff;
     #[autodiff(df, Reverse, Duplicated, Active)]
     fn f(x: &[f32; 2]) -> f32 {
         x[0] * x[0] + x[1] * x[0]
@@ -109,6 +114,7 @@ samples::test! {
 samples::test! {
     forward_and_reverse;
     // ANCHOR: forward_and_reverse
+    use std::autodiff::autodiff;
     #[autodiff(df_fwd, Forward, Dual, Dual)]
     #[autodiff(df_rev, Reverse, Duplicated, Duplicated)]
     fn f(x: &[f32; 2], y: &mut f32) {
@@ -143,6 +149,7 @@ samples::test! {
 samples::test! {
     all_active;
     // ANCHOR: all_active
+    use std::autodiff::autodiff;
     #[autodiff(df, Reverse, Active, Active, Active)]
     fn f(x: f32, y: f32) -> f32 {
         x * x + 3.0 * y

@@ -1,5 +1,6 @@
 samples::test! {
     vec;
+    use std::autodiff::autodiff;
     #[autodiff(jac, ReverseFirst, Duplicated, Duplicated)]
     fn sin(x: &Vec<f32>, y: &mut f32) {
         *y = x.into_iter().map(|x| f32::sin(*x)).sum()

@@ -1,5 +1,6 @@
 samples::test! {
     duplicated_active;
+    use std::autodiff::autodiff;
     #[autodiff(cos_box, Reverse, Duplicated, Active)]
     fn sin(x: &Box<f32>) -> f32 {
         f32::sin(**x)
