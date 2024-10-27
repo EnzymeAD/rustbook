@@ -1,5 +1,6 @@
 samples::test! {
     foo;
+    use std::autodiff::autodiff;
     #[autodiff(df, Forward, Dual, Dual)]
     fn f(x: &[f32; 2]) -> f32 { x[0] * x[0] + x[1] * x[0] }
 
