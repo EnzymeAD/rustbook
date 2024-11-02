@@ -7,8 +7,8 @@ We currently support the following values for `autodiff`:
 ```bash
 PrintTA // Print TypeAnalysis information
 PrintAA // Print ActivityAnalysis information
+Print // Print differentiated functions while they are being generated and optimized
 PrintPerf // Print AD related Performance warnings
-Print // Print all of the above
 PrintModBefore // Print the whole LLVM-IR module before running opts
 PrintModAfterOpts // Print the whole LLVM-IR module after running opts, before AD
 PrintModAfterEnzyme // Print the whole LLVM-IR module after running opts and AD
