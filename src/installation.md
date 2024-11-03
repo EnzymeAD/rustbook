@@ -34,4 +34,26 @@ cargo +enzyme test reverse
 If you want to use Autodiff in your own projects, you will need to add `lto="fat"` to your Cargo.toml 
 and use `cargo +enzyme` instead of `cargo` or `cargo +nightly`. 
 
+## Compiler Explorer and dist builds
+
+Our compiler explorer instance can be updated to a newer rustc in a similar way. First, prepare a docker instance.
+```bash
+docker run -it ubuntu:22.04
+export CC=clang CXX=clang++
+apt update
+apt install wget vim python3 git curl libssl-dev pkg-config lld ninja-build cmake clang build-essential 
+```
+Then build rustc in a slightly altered way:
+```bash
+git clone --depth=1 https://github.com/EnzymeAD/rust.git
+cd rust
+./configure --enable-llvm-link-shared --enable-llvm-plugins --enable-llvm-enzyme --release-channel=nightly --enable-llvm-assertions --enable-clang --enable-lld --enable-option-checking --enable-ninja --disable-docs
+./x dist
+```
+We then copy the tarball to our host. The dockerid is the newest entry under `docker ps -a`.
+```bash
+docker cp <dockerid>:/home/rust/build/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.gz rust-nightly-x86_64-unknown-linux-gnu.tar.gz
+```
+Afterwards we can create a new (pre-release) tag on the EnzymeAD/rust repository and make a PR against the EnzymeAD/enzyme-explorer repository to update the tag.
+Remember to ping `tgymnich` on the PR to run his update script.
 
