@@ -8,6 +8,7 @@
   - [Forward Mode](./usage/fwd.md)
   - [Reverse Mode](./usage/rev.md)
   - [Higher Order Derivatives](./usage/higher.md)
+  - [Python Integration](./usage/python.md)
 - [Current Limitations](./limitations.md)
   - [Future Work](./future_work.md)
 - [History and ecosystem](./ecosystem.md)
