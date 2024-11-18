@@ -21,6 +21,29 @@ samples::test! {
 }
 
 samples::test! {
+    chemistry;
+    // ANCHOR: chemistry
+    use std::autodiff::autodiff;
+    #[autodiff(dchem, Reverse, Duplicated, Const, Const, Const)]
+    fn chemistry(
+        arg1: &mut [f64],
+        arg2: [i32; 4],
+        arg3: &mut [i32],
+        arg4: i32,
+    ){}
+
+    fn main() {
+        let mut arg1 = [0.0, 0.0, 0.0, 0.0];
+        let mut darg1 = [0.0, 0.0, 0.0, 0.0];
+        let arg2 = [0, 1, 2, 3];
+        let mut arg3 = [0, 1, 2, 3];
+        let arg4 = 4;
+        dchem(&mut arg1, &mut darg1, arg2, &mut arg3, arg4);
+    }
+    // ANCHOR_END: chemistry
+}
+
+samples::test! {
     active_only;
     // ANCHOR:  active_only
     use std::autodiff::autodiff;
