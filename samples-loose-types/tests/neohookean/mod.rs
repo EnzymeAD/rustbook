@@ -3,6 +3,7 @@
 
 #![allow(non_snake_case)]
 
+use std::autodiff::autodiff;
 use std::ops::{Add, Mul, Sub};
 
 type Mat3x3 = [[f64; 3]; 3];
@@ -244,7 +245,7 @@ impl NH {
 
 // We can only differentiate free functions, not methods (yet)
 // Helmholtz free energy density
-#[autodiff(d_psi, ReverseFirst, Duplicated, Const, Active)]
+#[autodiff(d_psi, Reverse, Duplicated, Const, Active)]
 fn psi(e: &KM, nh: &NH) -> f64 {
     let mu = nh.mu;
     let lambda = nh.lambda;

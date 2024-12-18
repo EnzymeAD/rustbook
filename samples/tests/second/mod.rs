@@ -2,7 +2,7 @@ samples::test! {
     forward_of_reverse;
     // ANCHOR: forward_of_reverse
     use std::autodiff::autodiff;
-    #[autodiff(df, ReverseFirst, Duplicated, Active)]
+    #[autodiff(df, Reverse, Duplicated, Active)]
     fn f(x: &[f32; 2]) -> f32 {
         x[0] * x[0] + x[1] * x[0]
     }
@@ -41,7 +41,7 @@ samples::test! {
         df(x, dx, out, dout);
     }
 
-    #[autodiff(df, ReverseFirst, Duplicated, Duplicated)]
+    #[autodiff(df, Reverse, Duplicated, Duplicated)]
     fn f(x: &[f32;2], y: &mut [f32;1]) {
         y[0] = x[0] * x[0] + x[1] * x[0]
     }
