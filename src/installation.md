@@ -6,10 +6,13 @@ This work is in the process of upstreaming into nightly Rust. In the future a ma
 
 First you need to clone and configure this Rust fork:
 ```bash
-git clone --depth=1 git@github.com:EnzymeAD/rust.git
+git clone --depth=1 git@github.com:rust-lang/rust.git
 cd rust
 ./configure --enable-llvm-link-shared --enable-llvm-plugins --enable-llvm-enzyme --release-channel=nightly --enable-llvm-assertions --enable-clang --enable-lld --enable-option-checking --enable-ninja --disable-docs
 ```
+PSA: 
+At the time of writing, the enzyme feature on the main branch is slightly broken, we hope to fix this over the next week or two.
+You should consider cloning [this branch](https://github.com/rust-lang/rust/pull/136428), as it has a one-line fix, needed to build rust-enzyme.
 
 Afterwards you can build rustc using:
 ```bash
@@ -52,7 +55,7 @@ cd rust
 ```
 We then copy the tarball to our host. The dockerid is the newest entry under `docker ps -a`.
 ```bash
-docker cp <dockerid>:/home/rust/build/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.gz rust-nightly-x86_64-unknown-linux-gnu.tar.gz
+docker cp <dockerid>:/rust/build/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.gz rust-nightly-x86_64-unknown-linux-gnu.tar.gz
 ```
 Afterwards we can create a new (pre-release) tag on the EnzymeAD/rust repository and make a PR against the EnzymeAD/enzyme-explorer repository to update the tag.
 Remember to ping `tgymnich` on the PR to run his update script.
