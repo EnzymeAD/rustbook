@@ -60,3 +60,31 @@ docker cp <dockerid>:/rust/build/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.
 Afterwards we can create a new (pre-release) tag on the EnzymeAD/rust repository and make a PR against the EnzymeAD/enzyme-explorer repository to update the tag.
 Remember to ping `tgymnich` on the PR to run his update script.
 
+
+## Build instruction for Enzyme itself
+
+Following the Rust build instruction above will build LLVMEnzyme, LLDEnzyme, and ClangEnzyme along with the Rust compiler.
+We recommend that approach, if you just want to use any of them and have no experience with cmake.
+However, if you prefer to just build Enzyme without Rust, then these instructions might help.
+
+```
+git clone --depth=1 git@github.com:llvm/llvm-project.git 
+cd llvm-project
+mkdir build
+cd build
+cmake -G Ninja ../llvm -DLLVM_TARGETS_TO_BUILD="host" -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_ENABLE_RUNTIMES="openmp" -DLLVM_ENABLE_PLUGINS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=.
+ninja
+ninja install
+```
+This gives you a working LLVM build, now we can continue with building Enzyme.
+Leave the `llvm-project` folder, and execute the following commands:
+```
+git clone git@github.com:EnzymeAD/Enzyme.git 
+cd Enzyme/enzyme
+mkdir build 
+cd build 
+cmake .. -G Ninja -DLLVM_DIR=<YourLocalPath>/llvm-project/build/lib/cmake/llvm/ -DLLVM_EXTERNAL_LIT=<YourLocalPath>/llvm-project/llvm/utils/lit/lit.py -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=YES -DBUILD_SHARED_LIBS=ON
+ninja
+```
+This will build Enzyme, and you can find it in `Enzyme/enzyme/build/lib/<LLD/Clang/LLVM>Enzyme.so`. (Endings might differ based on your OS).
+
