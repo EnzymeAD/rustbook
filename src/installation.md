@@ -10,9 +10,6 @@ git clone --depth=1 git@github.com:rust-lang/rust.git
 cd rust
 ./configure --enable-llvm-link-shared --enable-llvm-plugins --enable-llvm-enzyme --release-channel=nightly --enable-llvm-assertions --enable-clang --enable-lld --enable-option-checking --enable-ninja --disable-docs
 ```
-PSA: 
-At the time of writing, the enzyme feature on the main branch is slightly broken, we hope to fix this over the next week or two.
-You should consider cloning [this branch](https://github.com/rust-lang/rust/pull/136428), as it has a one-line fix, needed to build rust-enzyme.
 
 Afterwards you can build rustc using:
 ```bash
