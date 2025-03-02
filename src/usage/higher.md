@@ -1,9 +1,6 @@
 # Higher Order Derivatives
 
-Computing higher order derivatives like hessians can be done with Enzyme by differentiating functions that compute lower order derivatives. 
-This requires that functions are differentiated in the right order, which we currently don't handle.
-As a workaround, we introduce two new AD modes `ForwardFirst` and `ReverseFirst` that will be differentiated (and optimized)
-before we differentiate the default `Forward` and `Reverse` mode invocations. An example is given below.
+Computing higher order derivatives like hessians can be done with std::autodiff by differentiating functions that compute lower order derivatives. 
 
 
 ```rust
@@ -15,7 +12,7 @@ fn df2(x: &[f32;2], dx: &mut [f32;2], out: &mut [f32;1], dout: &mut [f32;1]) {
     df(x, dx, out, dout);
 }
 
-#[autodiff(df, ReverseFirst, Duplicated, Duplicated)]
+#[autodiff(df, Reverse, Duplicated, Duplicated)]
 fn f(x: &[f32;2], y: &mut [f32;1]) {
     y[0] = x[0] * x[0] + x[1] * x[0]
 }
