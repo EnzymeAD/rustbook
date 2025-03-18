@@ -1,4 +1,5 @@
 # Reverse Mode
+
 # Autodiff on LLVM IR
 
 TODO: Typical LICM \\(O(n)\\) vs \\(O(n^2)\\) Enzyme example.
@@ -6,17 +7,14 @@ TODO: Talk about what makes this approach special and a good fit for Rust concep
 
 ## Changes to Rust
 
-TODO: Talk about the new attributes and define the semantics of these new attributes.  Give examples.
-
-
+TODO: Talk about the new attributes and define the semantics of these new attributes. Give examples.
 
 #### Reverse Mode
+
 Both the inplace and "normal" variant return the gradient. The difference is that with `Active` the gradient is returned and with `Duplicated` the gradient is accumulated in-place.
 
-
-
-
 ### Usage story
+
 Let us start by looking at the most basic examples we can think of:
 
 \\[ f(x,y) = x^2 + 3y \\]
@@ -103,7 +101,7 @@ _Uuuuhm. Yeah?_ We want to minimize our loss, so let's do `weights -= learning_r
 We also just learned how we can update our images through `dimages`, but unless you know how to shape the world around you that's pretty useless, so we just wasted a good amount of our compute time for not needed gradients. Let's try again:
 
 ```rust,ignore
-#[autodiff(backprop, Reverse, Constant, Duplicated, Active)]
+#[autodiff(backprop, Reverse, Const, Duplicated, Active)]
 fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
@@ -127,7 +125,7 @@ fn backprop(images: &[f32], weights: &[f32], dweights: &mut [f32]) {
 Great. No more random dimages that we don't know how to handle. Perfection? Almost:
 
 ```rust,ignore
-#[autodiff(backprop, Reverse, Constant, Duplicated, DuplicatedNoNeed)]
+#[autodiff(backprop, Reverse, Const, Duplicated, DuplicatedNoNeed)]
 fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
@@ -146,10 +144,10 @@ fn backprop(images: &[f32], weights: &[f32], dweights: &mut [f32]) {
 }
 ```
 
-We run backprop to get the gradients to update our weights, tracking of the loss while training is optional. Keep in mind that this will allow Enzyme to do some slightly advanced dead code elimination, but at the end of the day Enzyme will still need to compute most of `do_some_math(x, y)` in order to  calculate `dy`. So how much runtime you save by not asking for loss will depend on your application. We won't introduce a new motivation for our last example, but let's assume we have reasons to only want `dweights`, but do not care about the original weights anymore.
+We run backprop to get the gradients to update our weights, tracking of the loss while training is optional. Keep in mind that this will allow Enzyme to do some slightly advanced dead code elimination, but at the end of the day Enzyme will still need to compute most of `do_some_math(x, y)` in order to calculate `dy`. So how much runtime you save by not asking for loss will depend on your application. We won't introduce a new motivation for our last example, but let's assume we have reasons to only want `dweights`, but do not care about the original weights anymore.
 
 ```rust,ignore
-#[autodiff(backprop, Reverse, Constant, DuplicatedNoNeed, DuplicatedNoNeed)]
+#[autodiff(backprop, Reverse, Const, DuplicatedNoNeed, DuplicatedNoNeed)]
 fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
@@ -171,7 +169,7 @@ fn backprop(images: &[f32], weights: &[f32], dweights: &mut [f32]) {
 And as the very last one, Enzyme follows Jax and all the other AD tools by allowing batched backpropagation:
 
 ```rust,ignore
-#[autodiff(backprop, Reverse(2), Constant, Duplicated, DuplicatedNoNeed)]
+#[autodiff(backprop, Reverse(2), Const, Duplicated, DuplicatedNoNeed)]
 fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
   let loss = do_some_math(images, weights);
   loss
@@ -190,4 +188,3 @@ fn backprop(images: (&[f32], &[f32]), weights: (&[f32], &[f32]), dweights: (&mut
   enzyme_update_inplace_dy(dweights.1);
 }
 ```
-
