@@ -28,11 +28,11 @@ You can then run examples from our [docs](https://enzyme.mit.edu/index.fcgi/rust
 cd ..
 git clone git@github.com:EnzymeAD/rustbook.git  
 cd rustbook/samples
-cargo +enzyme test reverse
+RUSTFLAGS="-Zautodiff=Enable" cargo +enzyme test reverse
 ```
 
-If you want to use Autodiff in your own projects, you will need to add `lto="fat"` to your Cargo.toml 
-and use `cargo +enzyme` instead of `cargo` or `cargo +nightly`. 
+Autodiff is still experimental, so if you want to use it in your own projects, you will need to add `lto="fat"` to your Cargo.toml 
+and use `RUSTFLAGS="-Zautodiff=Enable" cargo +enzyme` instead of `cargo` or `cargo +nightly`. 
 
 ## Compiler Explorer and dist builds
 
