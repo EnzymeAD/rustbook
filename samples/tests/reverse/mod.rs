@@ -26,10 +26,10 @@ samples::test! {
     use std::autodiff::autodiff;
     #[autodiff(dchem, Reverse, Duplicated, Const, Const, Const)]
     fn chemistry(
-        arg1: &mut [f64],
-        arg2: [i32; 4],
-        arg3: &mut [i32],
-        arg4: i32,
+        _arg1: &mut [f64],
+        _arg2: [i32; 4],
+        _arg3: &mut [i32],
+        _arg4: i32,
     ){}
 
     fn main() {
@@ -112,7 +112,6 @@ samples::test! {
     }
     // ANCHOR_END: empty_return
 }
-
 
 samples::test! {
     active_return;

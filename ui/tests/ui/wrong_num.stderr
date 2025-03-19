@@ -1,7 +1,30 @@
 error: expected 2 activities, but found 3
- --> tests/ui/wrong_num.rs:3:1
+ --> tests/ui/wrong_num.rs:4:1
   |
-3 | #[autodiff(d_square, Reverse, Duplicated, Const, Active)]
+4 | #[autodiff(d_square, Reverse, Duplicated, Const, Active)]
   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   |
   = note: this error originates in the attribute macro `autodiff` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0601]: `main` function not found in crate `$CRATE`
+ --> tests/ui/wrong_num.rs:7:2
+  |
+7 | }
+  |  ^ consider adding a `main` function to `$DIR/tests/ui/wrong_num.rs`
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+ --> tests/ui/wrong_num.rs:4:1
+  |
+4 | #[autodiff(d_square, Reverse, Duplicated, Const, Active)]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ argument #1 of type `&f64` is missing
+  |
+note: function defined here
+ --> tests/ui/wrong_num.rs:5:4
+  |
+5 | fn square(x: &f64) -> f64 {
+  |    ^^^^^^ -------
+  = note: this error originates in the attribute macro `autodiff` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: provide the argument
+  |
+4 | #[autodiff(d_square, Reverse, Duplicated, Const, Active)](/* &f64 */)
+  |                                                          ++++++++++++
