@@ -8,11 +8,11 @@ The final goal here is to reproduce your bug in the Enzyme [compiler explorer](h
 in order to create a bug report in the [Enzyme core](https://github.com/EnzymeAD/Enzyme/issues) repository.
 
 We have an `autodiff` flag which you can pass to `RUSTFLAGS` to help with this. It will print the whole LLVM-IR module,
-along with dummy functions called `enzyme_opt_dbg_helper_<i>`. A potential workflow on Linux could look like:  
+along with some `__enzyme_fwddiff` or `__enzyme_autodiff` calls. A potential workflow on Linux could look like:  
 
 ## 1) Generate an LLVM-IR reproducer
 ```sh
-RUSTFLAGS="-Z autodiff=OPT" cargo +enzyme build --release &> out.ll 
+RUSTFLAGS="-Z autodiff=Enable,PrintModBefore" cargo +enzyme build --release &> out.ll 
 ```
 This also captures a few warnings and info messages above and below your module.
 Open out.ll and remove every line above `; ModuleID = <SomeHash>`. 
@@ -26,6 +26,7 @@ To confirm that you're previous step worked, let's will use LLVM's opt tool.
 Find your path to the opt binary, with a path similar to 
 `<some_dir>/rust/build/<x86/arm/...-target-tripple>/build/bin/opt`. 
 Also find `LLVMEnzyme-19.<so/dll/dylib>` path, similar to `/rust/build/target-tripple/enzyme/build/Enzyme/LLVMEnzyme-19`. 
+Please keep in mind that LLVM frequently updates it's LLVM backend, so the version number might be higher (20, 21, ...).
 Once you have both, run the following command:
 ```sh
 <path/to/opt out.ll> -load-pass-plugin=/path/to/LLVMEnzyme-19.so -passes="enzyme" -S 
@@ -37,9 +38,9 @@ The file is still huge, so let's automatically minimize it.
 ## 3) Minimize your LLVM-IR reproducer
 First find your llvm-extract binary, it's in the same folder as your opt binary. Then run:
 ```sh
-<path/to/llvm-extract> -S --func=<name> --recursive --rfunc="enzyme_opt_helper_*" out.ll -o mwe.ll 
+<path/to/llvm-extract> -S --func=<name> --recursive --rfunc="enzyme_autodiff*" --rfunc="enzyme_fwddiff*" --rfunc=<fnc_called_by_enzyme> out.ll -o mwe.ll 
 ```
-Please adjust the name passed with the `--func` flag. 
+Please adjust the name passed with the last `--func` flag.
 You can either apply the `#[no_mangle]` attribute to the function you differentiate,
 then you can replace it with the Rust name. Otherwise you will need to look up the mangled function name. 
 To do that open out.ll and search for `__enzyme_fwddiff` or `__enzyme_autodiff`. 
