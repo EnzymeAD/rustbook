@@ -96,15 +96,15 @@ Once you have a minimized reproducer (`mwe.ll` or `reduced.ll`), you can delve d
 
 ## 5) Report your bug.
 
-Afterwards, you should be able to copy and paste your `mwe.ll` (or `reduced.ll`) example into the [Enzyme compiler explorer](https://enzyme.mit.edu/explorer/).  
+Afterwards, you should be able to copy and paste your `mwe.ll` (or `reduced.ll`) example into our [compiler explorer](https://enzyme.mit.edu/explorer/).  
 Select `LLVM IR` as language and `opt 20` as compiler. Replace the field to the right of your compiler with `-passes="enzyme"`, if it is not already set. 
 Hopefully, you will see once again your now familiar error. Please use the share button to copy links to them.
 
 Please create an issue on [https://github.com/EnzymeAD/Enzyme/issues](https://github.com/EnzymeAD/Enzyme/issues) and share `mwe.ll` and (if you have it) `reduced.ll`, as well as links to the compiler explorer. Please feel free to also add your Rust code or a link to it.
 
-**Documenting Findings:** Some Enzyme errors, like `"Attempting to call an indirect active function whose runtime value is inactive"`, have historically caused confusion. If you investigate such an issue, even if you don't find a complete solution, please consider documenting your findings (e.g., in the Enzyme issue or by proposing an update to these docs). This helps prevent others from starting from scratch.
+**Documenting Findings:** Some Enzyme errors, like `"Attempting to call an indirect active function whose runtime value is inactive"`, have historically caused confusion. If you investigate such an issue, even if you don't find a complete solution, please consider documenting your findings. If the insights are general to Enzyme and not specific to its Rust usage, contributing them to the main [Enzyme documentation](https://github.com/EnzymeAD/www) is often the best first step. You can also mention your findings in the relevant Enzyme GitHub issue or propose updates to these docs if appropriate. This helps prevent others from starting from scratch.
 
-With a clear reproducer and documentation, hopefully someone from the Enzyme core repository will be able to fix your bug. Once that happens, the Enzyme submodule inside the rust compiler will be updated, which should allow you to differentiate your Rust code. Thanks for helping us to improve Rust-AD.
+With a clear reproducer and documentation, hopefully an Enzyme developer will be able to fix your bug. Once that happens, the Enzyme submodule inside the rust compiler will be updated, which should allow you to differentiate your Rust code. Thanks for helping us to improve Rust-AD.
 
 
 # Minimize Rust code
