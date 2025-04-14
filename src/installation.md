@@ -22,13 +22,12 @@ rustup toolchain link enzyme build/host/stage1
 rustup toolchain install nightly # enables -Z unstable-options
 ```
 
-You can then run examples from our [docs](https://enzyme.mit.edu/index.fcgi/rust/usage/usage.html):
+You can then run our test cases:
 
 ```bash
-cd ..
-git clone git@github.com:EnzymeAD/rustbook.git  
-cd rustbook/samples
-RUSTFLAGS="-Zautodiff=Enable" cargo +enzyme test reverse
+./x.py test --stage 1 library tests/ui/autodiff
+./x.py test --stage 1 library tests/codegen/autodiff
+./x.py test --stage 1 library tests/pretty/autodiff*
 ```
 
 Autodiff is still experimental, so if you want to use it in your own projects, you will need to add `lto="fat"` to your Cargo.toml 
