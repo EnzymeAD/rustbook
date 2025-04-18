@@ -9,15 +9,6 @@ so adding support for rayon should cover most cases. We assume 20-200 lines of c
 Enzyme core should be sufficient, making it a nice task to get started.  
 [rsmpi](https://github.com/rsmpi/rsmpi) (Rust wrapper for MPI) should already work, but it would be good to test.
 
-### Batching
-Batching allows computing multiple derivatives at once. This can help amortizing the cost
-of the forward pass. It can also be used to enable future vectorization. This feature
-is quite popular for ML projects. The JAX documentation gives an example [here](https://jax.readthedocs.io/en/latest/jax-101/04-advanced-autodiff.html#per-example-gradients).
-Batching is supported by Enzyme core and can be trivially implemented for Rust-Enzyme in a few hours, 
-the main blocker is bikesheding are around the frontend. Do we want to accept `N` individual shadow arguments?
-Do we want to accept a tuple of N elements? An array `[T;N]`?
-
-
 ### Custom Derivatives
 Let's assume that you want to use [differentiable rendering](https://arxiv.org/abs/2006.12057), 
 but someone added a "fast" version of the [inverse square root function](https://en.wikipedia.org/wiki/Fast_inverse_square_root#Overview_of_the_code) to your render engine, 
