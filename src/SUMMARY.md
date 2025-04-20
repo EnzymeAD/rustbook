@@ -9,12 +9,9 @@
   - [Reverse Mode](./usage/rev.md)
   - [Higher Order Derivatives](./usage/higher.md)
   - [Python Integration](./usage/python.md)
-- [Current Limitations](./limitations.md)
-  - [Future Work](./future_work.md)
+- [Current limitations & future work](./limitations.md)
 - [History and ecosystem](./ecosystem.md)
 - [How to Debug](./Debugging.md)
-  - [Debug the backend](./debug_backend.md)
-  - [Debug and Profile flags](./debug_flags.md)
 # Reference Guide
 - [Other Enzyme frontends](./other_Frontends.md)
 - [Forward Mode](./fwd.md)
