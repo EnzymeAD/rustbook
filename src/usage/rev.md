@@ -11,7 +11,7 @@ TODO: Talk about the new attributes and define the semantics of these new attrib
 
 #### Reverse Mode
 
-Both the inplace and "normal" variant return the gradient. The difference is that with `Active` the gradient is returned and with `Duplicated` the gradient is accumulated in-place.
+Both the in-place and "normal" variant return the gradient. The difference is that with `Active` the gradient is returned and with `Duplicated` the gradient is accumulated in-place.
 
 ### Usage story
 
@@ -154,7 +154,7 @@ fn training_loss(images: &[f32], weights: &[f32]) -> f32 {
 }
 ```
 
-`DuplicatedNoNeed` allows Enzyme to reuse the memory of our `weigths` variable as a scratchspace. That means it might increase the performance, but in exchange the variable shall not be assumed to have meaningful values afterwards. That's obviously only valid in Julia, C++, etc., but not in Rust. We had some discussion on whether this can be represented as MaybeUninit or Option but didn't got to a conclusion yet. (WIP)
+`DuplicatedNoNeed` allows Enzyme to reuse the memory of our `weights` variable as a scratchspace. That means it might increase the performance, but in exchange the variable shall not be assumed to have meaningful values afterwards. That's obviously only valid in Julia, C++, etc., but not in Rust. We had some discussion on whether this can be represented as MaybeUninit or Option but didn't got to a conclusion yet. (WIP)
 
 ```rust,ignore
 fn training_loss(images: &[f32], weights: &[f32]) -> f32 {

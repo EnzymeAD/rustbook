@@ -26,7 +26,7 @@ The second approach, source transformation, was first applied to Fortran and lat
 
 Autodiff remained an active research area with relatively clumsy research-grade tooling for decades. Select scientific applications, such as MITgcm, would shape their entire software engineering around enabling source transformation tools to compute derivatives. The most recent machine learning boom was precipitated by autodiff engineering improving to the point where practitioners could rapidly design new neural network architectures and have efficient gradients automatically available for gradient-based optimization. The modern deep learning libraries (PyTorch, TensorFlow, JAX) have grown into more general autodiff tools, albeit with language restrictions and [sharp edges](https://jax.readthedocs.io/en/latest/notebooks/Common_Gotchas_in_JAX.html#control-flow) due to custom JIT compilation separate from their host language (Python with C++ infrastructure).
 
-Enzyme takes advantage of the fact that while differentiating all features of the source language is a monumental task, differentating a single-statement assignment (SSA) form such as LLVM IR is far more tractable and allows complete language coverage. Since it's based on LLVM, it is language-agnostic for all LLVM-based languages.
+Enzyme takes advantage of the fact that while differentiating all features of the source language is a monumental task, differentiating a single-statement assignment (SSA) form such as LLVM IR is far more tractable and allows complete language coverage. Since it's based on LLVM, it is language-agnostic for all LLVM-based languages.
 
 TODO: https://enzyme.mit.edu/conference/assets/JanHueckelheim_EnzymeCon2023.pdf [[paper](https://arxiv.org/abs/2305.07546)]
 

@@ -36,7 +36,7 @@ While Enzyme is very fast due to running optimizations before AD, including vari
 
 ### Supporting other Codegen backends:
 Enzyme consists of ~50k LoC. Most of the rules around generating derivatives for instructions are written in LLVM Tablegen.td declarations and as such it should be relatively easy to port them. Enzyme also includes various experimental features which we don't need on the Rust side, an implementation for another codegen backend could therefore also end up a bit smaller.
-The cranelift backend would also benefit from ABI compability, which makes it very easy to test correctness of a new autodiff tool against Enzyme. Our modifications to `rustc_codegen_ssa` and previous layers of rustc are written in a generic way, s.t. no changes would be needed there to enable support for additional backends.
+The cranelift backend would also benefit from ABI compatibility, which makes it very easy to test correctness of a new autodiff tool against Enzyme. Our modifications to `rustc_codegen_ssa` and previous layers of rustc are written in a generic way, s.t. no changes would be needed there to enable support for additional backends.
 
 ### GPU / TPU / IPU / ... support.
 Enzyme supports differentiating CUDA/ROCm Kernels. 

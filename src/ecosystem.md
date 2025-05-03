@@ -28,11 +28,11 @@ The key aspect for the performance of our solution is that AD is performed after
 We can use Enzyme without modifying rustc, as demonstrated in [oxide-enzyme](https://github.com/enzymeAD/oxide-enzyme). 
 
 0) We let users specify a list of functions which they want to differentiate and how (forward/reverse, activities...). [example](https://github.com/EnzymeAD/oxide-enzyme/blob/main/example/rev/build.rs).
-1) We manually emit the optimized llmv-ir of our rust programm and all dependencies.
+1) We manually emit the optimized llvm-ir of our rust programs and all dependencies.
 2) We llvm-link all files into a single module (equivalent to fat-lto). 
 3) We call Enzyme to differentiate functions. 
 4) We adjust linker visibility of the new functions and create an archive that exports those new functions.
-5) We termintate this cargo invocation (can e.g. be achieved by -Zno-link).
+5) We terminate this cargo invocation (can e.g. be achieved by -Zno-link).
 6) We call cargo a second time, this time providing our archive as additional linker argument. The functions provided by the archive exactly match the extern fn declarations created through our macro [here](https://github.com/EnzymeAD/oxide-enzyme/blob/main/example/rev/src/main.rs).
 
 This PoC required the use of `build-std`, to be able to see the llvm-ir of functions from the std lib.  
@@ -44,7 +44,7 @@ This approach is further limited in compile times and reliability. See the examp
 and as such Enzyme has to run a usage analysis to determine the relevant type of a variable. This can be time consuming 
 (we encountered multiple cases with > 1000x longer compile times) and it can be unreliable, if Enzyme fails to deduce the correct type 
 of a variable due to insufficient usages. When calling Enzyme from within rustc, we are able to provide high-level type information to Enzyme.
-For oxide-enzyme, we tried to mitigate this by using a Dwarf debug parser (requirering debug information even in release builds), but even with this helpers we were completely unable to support Enums due to their ability of representing different types. This approach was also limited since rustc (at the time we wrote it) did not emit Dwarf information for all Rust types with unstable layout.
+For oxide-enzyme, we tried to mitigate this by using a Dwarf debug parser (requiring debug information even in release builds), but even with this helpers we were completely unable to support Enums due to their ability of representing different types. This approach was also limited since rustc (at the time we wrote it) did not emit Dwarf information for all Rust types with unstable layout.
 
 ### Rust level autodiff 
 Various Rust libraries for the training of Neural Networks exist (burn/candle/dfdx/rai/autograph).
